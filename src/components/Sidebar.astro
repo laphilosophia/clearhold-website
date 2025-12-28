@@ -40,33 +40,32 @@ function isActive(href: string) {
 }
 ---
 
-<nav class="lg:text-sm lg:leading-6 relative">
-  <div class="sticky top-24 -ml-0.5 pointer-events-none">
-    <div class="h-10 bg-gradient-to-b from-bg-base to-transparent"></div>
-    <div class="pointer-events-auto bg-bg-base/80 backdrop-blur-sm px-1">
-      {
-        navItems.map((section) => (
-          <div class="mb-8">
-            <h5 class="mb-3 font-semibold text-zinc-200">{section.title}</h5>
-            <ul class="space-y-2 border-l border-zinc-800">
-              {section.items.map((item) => (
-                <li>
-                  <a
-                    href={item.href}
-                    class:list={[
-                      'block border-l -ml-px pl-4 transition-colors hover:border-zinc-400 hover:text-zinc-300',
-                      isActive(item.href)
-                        ? 'border-indigo-500 text-indigo-400 font-medium'
-                        : 'border-transparent text-zinc-500',
-                    ]}>
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))
-      }
-    </div>
-  </div>
+<nav class="lg:text-sm lg:leading-6">
+  {
+    navItems.map((section, idx) => (
+      <div
+        class:list={['mb-8', idx === 0 ? '' : 'animate-fade-in-up']}
+        style={idx > 0 ? `animation-delay: ${idx * 0.1}s` : ''}>
+        <h5 class="mb-3 font-medium text-zinc-300 text-xs uppercase tracking-wider">
+          {section.title}
+        </h5>
+        <ul class="space-y-1 border-l border-white/5">
+          {section.items.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class:list={[
+                  'block border-l -ml-px pl-4 py-1.5 transition-all duration-200 hover:border-indigo-400/50 hover:text-white',
+                  isActive(item.href)
+                    ? 'border-indigo-500 text-indigo-400 font-medium bg-indigo-500/5'
+                    : 'border-transparent text-zinc-500',
+                ]}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
 </nav>
