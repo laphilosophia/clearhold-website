@@ -1,0 +1,258 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro'
+---
+
+<DocsLayout
+  title="Security & Trust Model"
+  description="HMAC signing, replay protection, and idempotency."
+>
+  <article class="doc-content">
+    <h1>Security & Trust Model</h1>
+
+    <p>No marketing language here. Just the mechanics.</p>
+
+    <h2>Authentication: HMAC-SHA256</h2>
+
+    <p>Every API request must be signed. We don't use bearer tokens or session cookies.</p>
+
+    <h3>Required Headers</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Header</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>X-Api-Key</code></td>
+          <td>Your integrator API key</td>
+        </tr>
+        <tr>
+          <td><code>X-Timestamp</code></td>
+          <td>Unix timestamp (seconds)</td>
+        </tr>
+        <tr>
+          <td><code>X-Nonce</code></td>
+          <td>Unique string per request</td>
+        </tr>
+        <tr>
+          <td><code>X-Signature</code></td>
+          <td>HMAC-SHA256 signature</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Signature Calculation</h3>
+
+    <pre><code>{`// 1. Build the signature base string
+signatureBase = method + "\\n" +
+                path + "\\n" +
+                timestamp + "\\n" +
+                nonce + "\\n" +
+                bodyHash
+
+// 2. Hash the request body (SHA-256, hex-encoded)
+bodyHash = sha256(requestBody || "")
+
+// 3. Compute HMAC-SHA256
+signature = hmac_sha256(signatureBase, apiSecret)
+
+// Example
+GET /v1/escrows/esc_123
+X-Timestamp: 1735430400
+X-Nonce: unique_abc123
+
+signatureBase = "GET\\n/v1/escrows/esc_123\\n1735430400\\nunique_abc123\\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"`}</code></pre>
+
+    <h3>Implementation Example (TypeScript)</h3>
+
+    <pre><code>{`import { createHmac, createHash } from 'crypto';
+
+function signRequest(
+  method: string,
+  path: string,
+  body: string | null,
+  apiSecret: string
+): { timestamp: string; nonce: string; signature: string } {
+  const timestamp = Math.floor(Date.now() / 1000).toString();
+  const nonce = crypto.randomUUID();
+
+  const bodyHash = createHash('sha256')
+    .update(body || '')
+    .digest('hex');
+
+  const signatureBase = [method, path, timestamp, nonce, bodyHash].join('\\n');
+
+  const signature = createHmac('sha256', apiSecret)
+    .update(signatureBase)
+    .digest('hex');
+
+  return { timestamp, nonce, signature };
+}`}</code></pre>
+
+    <h2>Replay Protection</h2>
+
+    <h3>Timestamp Validation</h3>
+
+    <p>
+      Requests with timestamps older than <strong>300 seconds (5 minutes)</strong> are rejected.
+    </p>
+
+    <pre><code>{`// Server-side check
+if (Math.abs(serverTime - requestTimestamp) > 300) {
+  return 401; // TIMESTAMP_EXPIRED
+}`}</code></pre>
+
+    <h3>Nonce Tracking</h3>
+
+    <p>
+      Each <code>X-Nonce</code> value can only be used once within the timestamp window. Reusing a nonce
+      returns <code>401 NONCE_REUSED</code>.
+    </p>
+
+    <h2>Idempotency</h2>
+
+    <p>
+      All <code>POST</code> requests require an <code>Idempotency-Key</code> header.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Scenario</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>New key + new request</td>
+          <td>Processed normally</td>
+        </tr>
+        <tr>
+          <td>Same key + same payload</td>
+          <td>Returns cached response</td>
+        </tr>
+        <tr>
+          <td>Same key + different payload</td>
+          <td><code>409 IDEMPOTENCY_MISMATCH</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Key Requirements</h3>
+
+    <ul>
+      <li>Format: UUID v4 recommended</li>
+      <li>Retention: 24 hours</li>
+      <li>Scope: Per integrator</li>
+    </ul>
+
+    <pre><code>{`Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000`}</code></pre>
+
+    <h2>Webhook Security</h2>
+
+    <p>Outbound webhooks are HMAC-signed using the same scheme.</p>
+
+    <h3>Verifying Webhook Signatures</h3>
+
+    <pre><code>{`// Incoming webhook
+POST /your-webhook-endpoint
+X-Clearhold-Timestamp: 1735430400
+X-Clearhold-Signature: abc123...
+
+// Verify
+signatureBase = "POST\\n/your-webhook-endpoint\\n" + timestamp + "\\n" + bodyHash
+expectedSignature = hmac_sha256(signatureBase, webhookSecret)
+
+if (!timingSafeEqual(expectedSignature, receivedSignature)) {
+  return 401; // Signature mismatch
+}`}</code></pre>
+
+    <h3>Retry Policy</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Attempt</th>
+          <th>Delay</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>0s (immediate)</td></tr>
+        <tr><td>2</td><td>1s</td></tr>
+        <tr><td>3</td><td>2s</td></tr>
+        <tr><td>4</td><td>4s</td></tr>
+        <tr><td>5</td><td>8s</td></tr>
+        <tr><td>6</td><td>16s (final)</td></tr>
+      </tbody>
+    </table>
+
+    <p>
+      After 6 failed attempts, webhooks are dead-lettered. No automatic recovery. You'll need to
+      manually replay from audit log.
+    </p>
+
+    <h2>Rate Limits</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Tier</th>
+          <th>Limit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Standard</td>
+          <td>100 requests/minute</td>
+        </tr>
+        <tr>
+          <td>Pro</td>
+          <td>1,000 requests/minute</td>
+        </tr>
+        <tr>
+          <td>Enterprise</td>
+          <td>Custom</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Rate limit headers included in every response:</p>
+
+    <pre><code>{`X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 87
+X-RateLimit-Reset: 1735430460`}</code></pre>
+
+    <h2>Security Guarantees</h2>
+
+    <ul>
+      <li>✓ All data encrypted in transit (TLS 1.3)</li>
+      <li>✓ All data encrypted at rest (AES-256)</li>
+      <li>✓ Timing-safe signature comparison</li>
+      <li>✓ No sensitive data in logs</li>
+      <li>✓ Audit trail for all state transitions</li>
+    </ul>
+
+    <div class="next-link">
+      <a href="/docs/decision-engine">Next: Decision Engine →</a>
+    </div>
+  </article>
+</DocsLayout>
+
+<style>
+  .doc-content {
+    max-width: 800px;
+  }
+
+  .next-link {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .next-link a {
+    font-weight: 500;
+  }
+</style>

@@ -1,0 +1,170 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro'
+---
+
+<DocsLayout
+  title="Architecture Overview"
+  description="High-level technical architecture and guarantees."
+>
+  <article class="doc-content">
+    <h1>Architecture Overview</h1>
+
+    <p>For CTOs and senior engineers evaluating this engine for production use.</p>
+
+    <h2>High-Level Flow</h2>
+
+    <pre
+      class="mermaid">
+      graph TD
+      Integrator[Integrator Backend] -->|HMAC Requests| API[API Edge]
+      API --> Core[Core Engine]
+      Core --> Storage[Event Storage]
+      subgraph Cloud[Clearhold Cloud]
+      API
+      Core
+      Storage
+      end
+      style Integrator fill:#1e1e2e,stroke:#a5b4fc
+      style API fill:#1e1e2e,stroke:#6366f1
+      style Core fill:#1e1e2e,stroke:#6366f1
+      style Storage fill:#1e1e2e,stroke:#6366f1
+    </pre>
+
+    <h2>Event-Driven Model</h2>
+
+    <p>Every API call produces events. Events are immutable. State is projected from events.</p>
+
+    <pre><code>{`// Example: Dispute Resolution Event
+{
+  "event_type": "DISPUTE_RESOLVED",
+  "entity_type": "dispute",
+  "entity_id": "dsp_abc123",
+  "escrow_id": "esc_xyz789",
+  "previous_state": "EVIDENCE_LOCKED",
+  "new_state": "RESOLVED",
+  "actor_id": "int_operator",
+  "actor_role": "operator",
+  "metadata": {
+    "decision": "SPLIT",
+    "final_ratio": { "client": 0.4, "contractor": 0.6 }
+  },
+  "timestamp": "2025-01-15T14:30:00Z"
+}`}</code></pre>
+
+    <h2>Deterministic Guarantees</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Guarantee</th>
+          <th>Implementation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Same input → Same output</td>
+          <td>Pure functions in core, no side effects</td>
+        </tr>
+        <tr>
+          <td>Time injection</td>
+          <td>All time values passed as parameters, never <code>Date.now()</code></td>
+        </tr>
+        <tr>
+          <td>Reproducible decisions</td>
+          <td>Decision engine uses fixed weights, all inputs recorded</td>
+        </tr>
+        <tr>
+          <td>Audit replay</td>
+          <td>Any decision can be re-calculated from stored inputs</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>State Machine Enforcement</h2>
+
+    <p>
+      Invalid state transitions are rejected at the API level. The engine never enters an
+      inconsistent state.
+    </p>
+
+    <h3>Escrow States</h3>
+
+    <pre
+      class="mermaid">
+      stateDiagram-v2
+      [*] --> CREATED
+      CREATED --> FUNDED
+      FUNDED --> IN_PROGRESS
+      FUNDED --> CANCELLED
+      IN_PROGRESS --> DELIVERED
+      IN_PROGRESS --> DISPUTED
+      DELIVERED --> COMPLETED
+      DISPUTED --> RESOLVED
+      DISPUTED --> CANCELLED
+      RESOLVED --> [*]
+      COMPLETED --> [*]
+      CANCELLED --> [*]
+    </pre>
+
+    <h3>Dispute States</h3>
+
+    <pre
+      class="mermaid">
+      stateDiagram-v2
+      [*] --> OPEN
+      OPEN --> EVIDENCE_LOCKED
+      EVIDENCE_LOCKED --> RESOLVED
+      RESOLVED --> [*]
+    </pre>
+
+    <h2>What Happens on Dispute</h2>
+
+    <ol>
+      <li><strong>Dispute opened</strong> — Escrow transitions to <code>DISPUTED</code></li>
+      <li><strong>Evidence window</strong> — Both parties submit references (72h default)</li>
+      <li><strong>Evidence locked</strong> — No more submissions accepted</li>
+      <li><strong>Recommendation generated</strong> — Decision engine produces suggestion</li>
+      <li>
+        <strong>Operator decision</strong> — Final ratio applied (within ±30% of recommendation)
+      </li>
+      <li><strong>Webhook dispatched</strong> — Integrator notified of resolution</li>
+    </ol>
+
+    <h2>No Hidden Components</h2>
+
+    <ul>
+      <li>No UI layer</li>
+      <li>No dashboard</li>
+      <li>No background jobs you don't control</li>
+      <li>No external dependencies you can't audit</li>
+    </ul>
+
+    <p>The engine is the API. The API is the engine.</p>
+
+    <div class="next-link">
+      <a href="/docs/quick-start">Next: Quick Start →</a>
+    </div>
+  </article>
+</DocsLayout>
+
+<style>
+  .doc-content {
+    max-width: 800px;
+  }
+
+  .flow-diagram,
+  .state-diagram {
+    font-size: 0.7rem;
+    overflow-x: auto;
+  }
+
+  .next-link {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .next-link a {
+    font-weight: 500;
+  }
+</style>

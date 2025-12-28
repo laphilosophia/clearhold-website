@@ -1,0 +1,324 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro'
+---
+
+<DocsLayout
+  title="API Reference"
+  description="Complete endpoint documentation with request/response examples."
+>
+  <article class="doc-content">
+    <h1>API Reference</h1>
+
+    <p>
+      Base URL: <code>https://api.clearhold.io/v1</code>
+    </p>
+
+    <p>
+      All requests require HMAC authentication. See <a href="/docs/security">Security Model</a>.
+    </p>
+
+    <h2>Escrows</h2>
+
+    <h3>POST /v1/escrows</h3>
+
+    <p>Create a new escrow contract.</p>
+
+    <div class="endpoint-details">
+      <h4>Request Body</h4>
+      <pre><code>{`{
+  "external_id": "string",      // Your reference ID (required)
+  "currency": "string",         // ISO 4217 code (required)
+  "total_amount": "integer",    // Amount in minor units (required)
+  "milestones": [               // At least 1 required
+    {
+      "milestone_id": "string", // Unique within escrow
+      "amount": "integer",      // Must sum to total_amount
+      "deadline": "string"      // ISO 8601 UTC
+    }
+  ]
+}`}</code></pre>
+
+      <h4>Response (201)</h4>
+      <pre><code>{`{
+  "id": "esc_...",
+  "external_id": "string",
+  "state": "CREATED",
+  "currency": "string",
+  "total_amount": "integer",
+  "milestones": [...],
+  "created_at": "ISO 8601"
+}`}</code></pre>
+
+      <h4>Errors</h4>
+      <ul>
+        <li><code>400</code> — Validation error (missing fields, invalid format)</li>
+        <li><code>409</code> — Milestone sum mismatch or duplicate external_id</li>
+      </ul>
+    </div>
+
+    <h3>POST /v1/escrows/:id/payment-status</h3>
+
+    <p>Declare payment status (you inform us, we don't poll).</p>
+
+    <div class="endpoint-details">
+      <h4>Request Body</h4>
+      <pre><code>{`{
+  "external_payment_ref": "string",  // Your payment reference
+  "status": "FUNDS_HELD | FUNDS_RELEASED | FUNDS_REFUNDED",
+  "declared_at": "ISO 8601"
+}`}</code></pre>
+
+      <h4>Response (200)</h4>
+      <pre><code>{`{
+  "status": "accepted",
+  "current_state": "FUNDED | CANCELLED"
+}`}</code></pre>
+    </div>
+
+    <h3>POST /v1/escrows/:id/deliverable</h3>
+
+    <p>Submit a deliverable reference for a milestone.</p>
+
+    <div class="endpoint-details">
+      <h4>Request Body</h4>
+      <pre><code>{`{
+  "milestone_id": "string",
+  "reference": {
+    "type": "external_reference",
+    "provider": "string",           // github, drive, dropbox, etc.
+    "uri": "string",                // Full URL
+    "content_hash": "sha256:..."    // Required prefix
+  }
+}`}</code></pre>
+
+      <h4>Response (200)</h4>
+      <pre><code>{`{
+  "status": "received",
+  "state": "DELIVERED"
+}`}</code></pre>
+    </div>
+
+    <h3>POST /v1/escrows/:id/dispute</h3>
+
+    <p>Open a dispute for an escrow.</p>
+
+    <div class="endpoint-details">
+      <h4>Request Body</h4>
+      <pre><code>{`{
+  "reason_code": "DELIVERABLE_INCOMPLETE | DELIVERABLE_NOT_AS_DESCRIBED | DELIVERABLE_LATE | PAYMENT_ISSUE | COMMUNICATION_BREAKDOWN | OTHER",
+  "opened_by": {
+    "actor_id": "string",
+    "actor_role": "client | contractor | operator"
+  }
+}`}</code></pre>
+
+      <h4>Response (201)</h4>
+      <pre><code>{`{
+  "id": "dsp_...",
+  "escrow_id": "esc_...",
+  "state": "OPEN",
+  "reason_code": "string",
+  "opened_by": {...},
+  "created_at": "ISO 8601"
+}`}</code></pre>
+
+      <h4>Errors</h4>
+      <ul>
+        <li><code>409</code> — Active dispute already exists</li>
+        <li><code>422</code> — Invalid state transition</li>
+      </ul>
+    </div>
+
+    <h2>Disputes</h2>
+
+    <h3>POST /v1/disputes/:id/evidence</h3>
+
+    <p>Submit evidence for a dispute.</p>
+
+    <div class="endpoint-details">
+      <h4>Request Body</h4>
+      <pre><code>{`{
+  "submitted_by": {
+    "actor_id": "string",
+    "actor_role": "client | contractor | operator"
+  },
+  "reference": {
+    "type": "external_reference",
+    "provider": "string",
+    "uri": "string",
+    "content_hash": "sha256:..."
+  }
+}`}</code></pre>
+
+      <h4>Response (201)</h4>
+      <pre><code>{`{
+  "id": "evd_...",
+  "dispute_id": "dsp_...",
+  "submitted_at": "ISO 8601"
+}`}</code></pre>
+
+      <h4>Errors</h4>
+      <ul>
+        <li><code>422</code> — Dispute not in OPEN state</li>
+      </ul>
+    </div>
+
+    <h3>POST /v1/disputes/:id/lock</h3>
+
+    <p>Lock evidence submission phase.</p>
+
+    <div class="endpoint-details">
+      <h4>Response (200)</h4>
+      <pre><code>{`{
+  "status": "locked",
+  "state": "EVIDENCE_LOCKED"
+}`}</code></pre>
+    </div>
+
+    <h3>GET /v1/disputes/:id/recommendation</h3>
+
+    <p>Get engine recommendation for dispute resolution.</p>
+
+    <div class="endpoint-details">
+      <h4>Response (200)</h4>
+      <pre><code>{`{
+  "recommendation": "FULL_RELEASE | FULL_REFUND | SPLIT",
+  "confidence": 0.0-1.0,
+  "signals": ["string"],
+  "suggested_ratio": {
+    "client": 0.0-1.0,
+    "contractor": 0.0-1.0
+  },
+  "engine_version": "v1.0.0"
+}`}</code></pre>
+    </div>
+
+    <h3>POST /v1/disputes/:id/decision</h3>
+
+    <p>Apply final decision to resolve dispute.</p>
+
+    <div class="endpoint-details">
+      <h4>Request Body</h4>
+      <pre><code>{`{
+  "decision": "FULL_RELEASE | FULL_REFUND | SPLIT",
+  "final_ratio": {
+    "client": 0.0-1.0,
+    "contractor": 0.0-1.0
+  },
+  "justification": "string"  // Required
+}`}</code></pre>
+
+      <h4>Response (200)</h4>
+      <pre><code>{`{
+  "status": "resolved",
+  "outcome": "string",
+  "payout": {
+    "client": "integer",      // Amount in minor units
+    "contractor": "integer"
+  }
+}`}</code></pre>
+
+      <h4>Errors</h4>
+      <ul>
+        <li><code>422</code> — Dispute already resolved</li>
+      </ul>
+    </div>
+
+    <h2>Error Model</h2>
+
+    <p>All errors follow this structure:</p>
+
+    <pre><code>{`{
+  "error_code": "INVALID_STATE_TRANSITION",
+  "message": "Human-readable description",
+  "context": {
+    "current_state": "string",
+    "attempted_action": "string"
+  }
+}`}</code></pre>
+
+    <h3>Common Error Codes</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>HTTP</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>VALIDATION_ERROR</code></td>
+          <td>400</td>
+          <td>Request body invalid</td>
+        </tr>
+        <tr>
+          <td><code>UNAUTHORIZED</code></td>
+          <td>401</td>
+          <td>HMAC signature invalid</td>
+        </tr>
+        <tr>
+          <td><code>NOT_FOUND</code></td>
+          <td>404</td>
+          <td>Resource doesn't exist</td>
+        </tr>
+        <tr>
+          <td><code>CONFLICT</code></td>
+          <td>409</td>
+          <td>Duplicate key or active dispute exists</td>
+        </tr>
+        <tr>
+          <td><code>INVALID_STATE_TRANSITION</code></td>
+          <td>422</td>
+          <td>State machine violation</td>
+        </tr>
+        <tr>
+          <td><code>IDEMPOTENCY_MISMATCH</code></td>
+          <td>409</td>
+          <td>Same key, different payload</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="next-link">
+      <a href="/docs/security">Next: Security & Trust Model →</a>
+    </div>
+  </article>
+</DocsLayout>
+
+<style>
+  .doc-content {
+    max-width: 850px;
+  }
+
+  .endpoint-details {
+    margin: 1rem 0 2rem;
+    padding: 1rem;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+
+  .endpoint-details h4 {
+    margin: 1rem 0 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .endpoint-details h4:first-child {
+    margin-top: 0;
+  }
+
+  .next-link {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .next-link a {
+    font-weight: 500;
+  }
+</style>

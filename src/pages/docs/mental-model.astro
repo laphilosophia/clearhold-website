@@ -1,0 +1,162 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro'
+---
+
+<DocsLayout
+  title="Mental Model"
+  description="Understand where Clearhold sits in your architecture."
+>
+  <article class="doc-content">
+    <h1>Mental Model</h1>
+
+    <blockquote>
+      This is the most important page in the documentation.<br />
+      If you misunderstand this, you will misintegrate.
+    </blockquote>
+
+    <h2>The Stripe Analogy</h2>
+
+    <p>Think of how you integrate Stripe:</p>
+
+    <ul>
+      <li>You don't build Stripe into your app—you <strong>call Stripe</strong></li>
+      <li>Stripe doesn't own your users—<strong>you do</strong></li>
+      <li>Stripe doesn't render UI—<strong>you do</strong></li>
+      <li>Stripe doesn't decide your checkout flow—<strong>you do</strong></li>
+    </ul>
+
+    <p>
+      Clearhold works the same way, except instead of payments, we orchestrate escrows and disputes.
+    </p>
+
+    <h2>Where We Sit in Your Architecture</h2>
+
+    <pre
+      class="mermaid">
+      graph TD
+      User[User] --> App[Your Application]
+      App -->|API Calls| Engine[Clearhold Engine]
+      Engine -->|Webhooks| App
+      subgraph Your_Infrastructure[Your Infrastructure]
+      User
+      App
+      end
+      subgraph Clearhold[Clearhold Cloud]
+      Engine
+      end
+      style Engine fill:#1e1e2e,stroke:#6366f1,stroke-width:2px,color:#fff
+      style App fill:#1e1e2e,stroke:#a5b4fc,stroke-width:2px,color:#fff
+      style User fill:#1e1e2e,stroke:#fff,stroke-width:1px,color:#fff
+
+      linkStyle default stroke:#818cf8,stroke-width:2px
+    </pre>
+
+    <h2>Data & Responsibility Boundary</h2>
+
+    <p>This is non-negotiable:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>We Own</th>
+          <th>You Own</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Escrow state machine</td>
+          <td>User identities</td>
+        </tr>
+        <tr>
+          <td>Dispute lifecycle</td>
+          <td>User authentication</td>
+        </tr>
+        <tr>
+          <td>Decision calculation</td>
+          <td>UI/UX</td>
+        </tr>
+        <tr>
+          <td>Audit log</td>
+          <td>Payment provider integration</td>
+        </tr>
+        <tr>
+          <td>State transitions</td>
+          <td>File/document storage</td>
+        </tr>
+        <tr>
+          <td>HMAC verification</td>
+          <td>Business logic beyond escrow</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>What This Means Practically</h2>
+
+    <h3>We Store References, Not Content</h3>
+
+    <p>
+      When you submit evidence for a dispute, you send us a <strong>reference</strong>:
+    </p>
+
+    <pre><code>{`{
+  "reference": {
+    "type": "external_reference",
+    "provider": "google_drive",
+    "uri": "https://drive.google.com/...",
+    "content_hash": "sha256:abc123..."
+  }
+}`}</code></pre>
+
+    <p>We store the hash for integrity verification. We never download or store the actual file.</p>
+
+    <h3>We Inform, Not Transact</h3>
+
+    <p>
+      When you create an escrow with <code>total_amount: 50000</code>, we record that information.
+      We don't hold funds. We don't process payments. When our decision engine says "split 60/40",
+      <strong>you</strong> execute that in your payment system.
+    </p>
+
+    <h3>We Recommend, You Enforce</h3>
+
+    <p>
+      Our decision engine produces a <strong>recommendation</strong> with a confidence score. As the operator,
+      you can accept it as-is, or adjust it within bounds (±30%). The final decision is yours. We just
+      make it defensible.
+    </p>
+
+    <h2>The Fundamental Question</h2>
+
+    <blockquote>"Is this the engine's job, or the integrator's job?"</blockquote>
+
+    <p>
+      When in doubt, it's <strong>your job</strong>. We do escrow orchestration. Everything else is
+      your domain.
+    </p>
+
+    <div class="next-link">
+      <a href="/docs/architecture">Next: Architecture Overview →</a>
+    </div>
+  </article>
+</DocsLayout>
+
+<style>
+  .doc-content {
+    max-width: 800px;
+  }
+
+  .arch-diagram {
+    font-size: 0.7rem;
+    overflow-x: auto;
+  }
+
+  .next-link {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .next-link a {
+    font-weight: 500;
+  }
+</style>

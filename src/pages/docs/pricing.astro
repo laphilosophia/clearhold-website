@@ -1,0 +1,107 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro'
+---
+
+<DocsLayout title="Pricing" description="Commercial model and pricing tiers.">
+  <article class="doc-content">
+    <h1>Pricing & Commercial Model</h1>
+
+    <div class="status-banner">
+      <p>📋 <strong>Contact Sales</strong></p>
+      <p>
+        Pricing is determined per integration. <a href="mailto:sales@clearhold.io">Contact us</a> for
+        a quote.
+      </p>
+    </div>
+
+    <h2>Model Overview</h2>
+
+    <p>Clearhold pricing is based on:</p>
+
+    <ul>
+      <li><strong>Escrow volume</strong> — Number of escrows created per month</li>
+      <li><strong>Dispute rate</strong> — Percentage of escrows that enter dispute</li>
+      <li><strong>Support tier</strong> — Standard, priority, or dedicated</li>
+    </ul>
+
+    <h2>What's Included</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>All Tiers</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Full API access</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>HMAC authentication</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>Webhook delivery</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>Decision engine</td>
+          <td>✓</td>
+        </tr>
+        <tr>
+          <td>Audit trail</td>
+          <td>✓</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>What We Don't Charge For</h2>
+
+    <ul>
+      <li>✓ API calls (no per-request fees)</li>
+      <li>✓ Webhook deliveries</li>
+      <li>✓ Storage (we only store references)</li>
+      <li>✓ Decision engine queries</li>
+    </ul>
+
+    <h2>Enterprise</h2>
+
+    <p>For high-volume integrators, we offer:</p>
+
+    <ul>
+      <li>Custom rate limits</li>
+      <li>Dedicated support</li>
+      <li>SLA guarantees</li>
+      <li>On-premise deployment options</li>
+    </ul>
+
+    <p>
+      <a href="mailto:enterprise@clearhold.io">Contact enterprise sales</a>
+    </p>
+  </article>
+</DocsLayout>
+
+<style>
+  .doc-content {
+    max-width: 800px;
+  }
+
+  .status-banner {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-accent);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    margin: 2rem 0;
+  }
+
+  .status-banner p {
+    margin: 0.25rem 0;
+  }
+
+  .status-banner p:first-child {
+    font-size: 1.25rem;
+  }
+</style>

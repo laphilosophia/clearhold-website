@@ -1,0 +1,104 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro'
+---
+
+<DocsLayout title="SDKs" description="Client libraries for Clearhold integration.">
+  <article class="doc-content">
+    <h1>SDKs</h1>
+
+    <div class="status-banner">
+      <p>🚧 <strong>Coming Soon</strong></p>
+      <p>SDKs are planned for a future release.</p>
+    </div>
+
+    <h2>Current Integration</h2>
+
+    <p>For now, integrate directly via HTTP with HMAC signing. The API is straightforward:</p>
+
+    <ul>
+      <li>~100 lines of code for most integrations</li>
+      <li>See <a href="/docs/security">Security Model</a> for signing details</li>
+      <li>See <a href="/docs/api-reference">API Reference</a> for endpoints</li>
+    </ul>
+
+    <h2>Planned SDKs</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Language</th>
+          <th>Status</th>
+          <th>ETA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>TypeScript/Node.js</td>
+          <td>Planned</td>
+          <td>Q2 2025</td>
+        </tr>
+        <tr>
+          <td>Python</td>
+          <td>Planned</td>
+          <td>Q2 2025</td>
+        </tr>
+        <tr>
+          <td>Go</td>
+          <td>Under consideration</td>
+          <td>TBD</td>
+        </tr>
+        <tr>
+          <td>Ruby</td>
+          <td>Under consideration</td>
+          <td>TBD</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>SDK Design Principles</h2>
+
+    <p>When released, SDKs will:</p>
+
+    <ul>
+      <li>✓ Handle HMAC signing automatically</li>
+      <li>✓ Provide typed request/response objects</li>
+      <li>✓ Manage idempotency keys</li>
+      <li>✓ Include webhook signature verification helpers</li>
+    </ul>
+
+    <p>SDKs will NOT:</p>
+
+    <ul>
+      <li>✗ Cache responses</li>
+      <li>✗ Maintain local state</li>
+      <li>✗ Pool connections</li>
+      <li>✗ Batch requests</li>
+      <li>✗ Implement business logic</li>
+    </ul>
+
+    <p>SDKs are thin HTTP wrappers. Nothing more.</p>
+  </article>
+</DocsLayout>
+
+<style>
+  .doc-content {
+    max-width: 800px;
+  }
+
+  .status-banner {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-warning);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    margin: 2rem 0;
+  }
+
+  .status-banner p {
+    margin: 0.25rem 0;
+  }
+
+  .status-banner p:first-child {
+    font-size: 1.25rem;
+  }
+</style>

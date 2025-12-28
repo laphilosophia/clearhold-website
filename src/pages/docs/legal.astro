@@ -1,0 +1,141 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro'
+---
+
+<DocsLayout
+  title="Legal & Liability"
+  description="Data ownership, decision liability, and fund custody."
+>
+  <article class="doc-content">
+    <h1>Legal & Liability</h1>
+
+    <p>
+      This page covers the legal boundaries of the service. It is not legal advice. Consult your
+      legal team for jurisdiction-specific questions.
+    </p>
+
+    <h2>Data Ownership</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Data Type</th>
+          <th>Owner</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>User identities</td>
+          <td><strong>You</strong> — We only see opaque IDs</td>
+        </tr>
+        <tr>
+          <td>Files/documents</td>
+          <td><strong>You</strong> — We store references only</td>
+        </tr>
+        <tr>
+          <td>Payment data</td>
+          <td><strong>You/Payment Provider</strong> — We never see card numbers</td>
+        </tr>
+        <tr>
+          <td>Escrow state</td>
+          <td><strong>Shared</strong> — You define, we track</td>
+        </tr>
+        <tr>
+          <td>Audit logs</td>
+          <td><strong>Shared</strong> — Immutable record of transactions</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Decision Liability</h2>
+
+    <h3>What We're Responsible For</h3>
+
+    <ul>
+      <li>Deterministic execution of the decision engine</li>
+      <li>Accurate recording of all inputs and outputs</li>
+      <li>Availability per stated SLA</li>
+      <li>Security of the API and stored data</li>
+    </ul>
+
+    <h3>What We're NOT Responsible For</h3>
+
+    <ul>
+      <li>Business outcomes of decisions you apply</li>
+      <li>Disputes with your end users</li>
+      <li>Legal interpretation of decisions in your jurisdiction</li>
+      <li>Your use of decisions outside the API</li>
+    </ul>
+
+    <blockquote>We provide recommendations. You apply them. You enforce them.</blockquote>
+
+    <h2>Fund Custody</h2>
+
+    <p>
+      <strong>We never custody funds.</strong>
+    </p>
+
+    <p>
+      "Escrow" in our context means lifecycle orchestration, not fund holding. Funds remain in your
+      payment system (Stripe, Adyen, bank accounts, etc.). We track state and produce decisions. You
+      execute payouts.
+    </p>
+
+    <p>This means:</p>
+
+    <ul>
+      <li>We are not a money transmitter</li>
+      <li>We are not subject to escrow licensing in most jurisdictions</li>
+      <li>Your payment provider handles PCI compliance, fund settlement, etc.</li>
+    </ul>
+
+    <h2>Liability Cap</h2>
+
+    <p>Our liability is capped per your service agreement. Typical structure:</p>
+
+    <ul>
+      <li>Direct damages: capped at fees paid in preceding 12 months</li>
+      <li>Indirect/consequential damages: excluded</li>
+      <li>Force majeure: standard exclusions apply</li>
+    </ul>
+
+    <p>Specific terms are in your contract. This is not legal advice.</p>
+
+    <h2>Audit Trail for Legal Use</h2>
+
+    <p>Our audit log provides:</p>
+
+    <ul>
+      <li>Immutable event records</li>
+      <li>Timestamps with source attribution</li>
+      <li>Full decision inputs and outputs</li>
+      <li>Deterministic replay capability</li>
+    </ul>
+
+    <p>
+      Whether this is admissible in legal proceedings depends on your jurisdiction and the specific
+      proceeding. We can provide audit exports upon request.
+    </p>
+
+    <h2>GDPR / Data Protection</h2>
+
+    <p>We process minimal personal data:</p>
+
+    <ul>
+      <li>Actor IDs are opaque identifiers you control</li>
+      <li>We don't store names, emails, or personal details</li>
+      <li>Data processing agreement (DPA) available upon request</li>
+    </ul>
+
+    <p>
+      For GDPR purposes, you are the data controller. We are a data processor for the limited data
+      you send us.
+    </p>
+  </article>
+</DocsLayout>
+
+<style>
+  .doc-content {
+    max-width: 800px;
+  }
+</style>

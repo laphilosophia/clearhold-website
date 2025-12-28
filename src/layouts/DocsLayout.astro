@@ -1,0 +1,47 @@
+---
+import Sidebar from '../components/Sidebar.astro'
+import BaseLayout from '../layouts/BaseLayout.astro'
+
+interface Props {
+  title: string
+  description?: string
+  class?: string
+}
+
+const { title, description, class: className } = Astro.props
+---
+
+<BaseLayout title={title} description={description}>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs'
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#1e1e2e',
+        primaryTextColor: '#c7d2fe',
+        primaryBorderColor: '#6366f1',
+        lineColor: '#818cf8',
+        secondaryColor: '#18181b',
+        tertiaryColor: '#111113',
+      },
+    })
+  </script>
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+      <!-- Sidebar (Desktop) -->
+      <aside
+        class="hidden lg:block lg:col-span-3 py-8 ml-3 sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto"
+      >
+        <Sidebar />
+      </aside>
+
+      <!-- Main Content -->
+      <main class="py-8 lg:col-span-9">
+        <article class:list={['prose prose-zinc prose-invert max-w-none', className]}>
+          <slot />
+        </article>
+      </main>
+    </div>
+  </div>
+</BaseLayout>

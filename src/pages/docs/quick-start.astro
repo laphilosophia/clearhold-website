@@ -1,0 +1,214 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro'
+---
+
+<DocsLayout
+  title="Quick Start"
+  description="Create your first escrow → dispute → decision in minutes."
+>
+  <article class="doc-content">
+    <h1>Quick Start</h1>
+
+    <p>
+      This guide shows the minimal path: create an escrow, submit a deliverable, open a dispute, get
+      a decision. No edge cases. No error handling. Just the golden path.
+    </p>
+
+    <h2>Prerequisites</h2>
+
+    <ul>
+      <li>API Key and Secret from your integrator account</li>
+      <li>Ability to send HMAC-signed HTTP requests</li>
+    </ul>
+
+    <h2>Step 1: Create an Escrow</h2>
+
+    <pre><code>{`POST /v1/escrows
+Content-Type: application/json
+X-Api-Key: your_api_key
+X-Timestamp: 1735430400
+X-Nonce: unique_nonce_123
+X-Signature: hmac_sha256_signature
+
+{
+  "external_id": "order_12345",
+  "currency": "USD",
+  "total_amount": 50000,
+  "milestones": [
+    {
+      "milestone_id": "ms_design",
+      "amount": 20000,
+      "deadline": "2025-02-01T00:00:00Z"
+    },
+    {
+      "milestone_id": "ms_development",
+      "amount": 30000,
+      "deadline": "2025-03-01T00:00:00Z"
+    }
+  ]
+}`}</code></pre>
+
+    <p><strong>Response (201):</strong></p>
+
+    <pre><code>{`{
+  "id": "esc_abc123",
+  "external_id": "order_12345",
+  "state": "CREATED",
+  "currency": "USD",
+  "total_amount": 50000,
+  "milestones": [...],
+  "created_at": "2025-01-15T10:00:00Z"
+}`}</code></pre>
+
+    <h2>Step 2: Declare Payment Status</h2>
+
+    <p>After funds are secured in your payment system:</p>
+
+    <pre><code>{`POST /v1/escrows/esc_abc123/payment-status
+
+{
+  "external_payment_ref": "pi_stripe_xyz",
+  "status": "FUNDS_HELD",
+  "declared_at": "2025-01-15T10:30:00Z"
+}`}</code></pre>
+
+    <p><strong>Response (200):</strong></p>
+
+    <pre><code>{`{
+  "status": "accepted",
+  "current_state": "FUNDED"
+}`}</code></pre>
+
+    <h2>Step 3: Submit a Deliverable</h2>
+
+    <pre><code>{`POST /v1/escrows/esc_abc123/deliverable
+
+{
+  "milestone_id": "ms_design",
+  "reference": {
+    "type": "external_reference",
+    "provider": "github",
+    "uri": "https://github.com/org/repo/pull/42",
+    "content_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb924..."
+  }
+}`}</code></pre>
+
+    <p>State transitions to <code>DELIVERED</code>.</p>
+
+    <h2>Step 4: Open a Dispute</h2>
+
+    <p>Client claims deliverable is incomplete:</p>
+
+    <pre><code>{`POST /v1/escrows/esc_abc123/dispute
+
+{
+  "reason_code": "DELIVERABLE_INCOMPLETE",
+  "opened_by": {
+    "actor_id": "usr_client_456",
+    "actor_role": "client"
+  }
+}`}</code></pre>
+
+    <p><strong>Response (201):</strong></p>
+
+    <pre><code>{`{
+  "id": "dsp_def456",
+  "escrow_id": "esc_abc123",
+  "state": "OPEN",
+  "reason_code": "DELIVERABLE_INCOMPLETE",
+  "opened_by": { "actor_id": "usr_client_456", "actor_role": "client" },
+  "created_at": "2025-01-20T14:00:00Z"
+}`}</code></pre>
+
+    <h2>Step 5: Submit Evidence</h2>
+
+    <p>Both parties submit evidence references:</p>
+
+    <pre><code>{`POST /v1/disputes/dsp_def456/evidence
+
+{
+  "submitted_by": {
+    "actor_id": "usr_contractor_789",
+    "actor_role": "contractor"
+  },
+  "reference": {
+    "type": "external_reference",
+    "provider": "google_drive",
+    "uri": "https://drive.google.com/file/d/...",
+    "content_hash": "sha256:..."
+  }
+}`}</code></pre>
+
+    <h2>Step 6: Lock Evidence & Get Recommendation</h2>
+
+    <pre><code>{`POST /v1/disputes/dsp_def456/lock`}</code></pre>
+
+    <pre><code>{`GET /v1/disputes/dsp_def456/recommendation`}</code></pre>
+
+    <p><strong>Response:</strong></p>
+
+    <pre><code>{`{
+  "recommendation": "SPLIT",
+  "confidence": 0.72,
+  "signals": ["late_delivery", "partial_completion"],
+  "suggested_ratio": {
+    "client": 0.4,
+    "contractor": 0.6
+  },
+  "engine_version": "v1.0.0"
+}`}</code></pre>
+
+    <h2>Step 7: Apply Decision</h2>
+
+    <pre><code>{`POST /v1/disputes/dsp_def456/decision
+
+{
+  "decision": "SPLIT",
+  "final_ratio": {
+    "client": 0.35,
+    "contractor": 0.65
+  },
+  "justification": "Milestone delivered late but functional"
+}`}</code></pre>
+
+    <p><strong>Response (200):</strong></p>
+
+    <pre><code>{`{
+  "status": "resolved",
+  "outcome": "SPLIT",
+  "payout": {
+    "client": 17500,
+    "contractor": 32500
+  }
+}`}</code></pre>
+
+    <h2>What Happens Next</h2>
+
+    <p>
+      A webhook is dispatched to your registered endpoint with the <code>DISPUTE_RESOLVED</code> event.
+      You use those payout figures to execute transfers in your payment system.
+    </p>
+
+    <blockquote>We recommend. You enforce.</blockquote>
+
+    <div class="next-link">
+      <a href="/docs/core-concepts">Next: Core Concepts →</a>
+    </div>
+  </article>
+</DocsLayout>
+
+<style>
+  .doc-content {
+    max-width: 800px;
+  }
+
+  .next-link {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .next-link a {
+    font-weight: 500;
+  }
+</style>

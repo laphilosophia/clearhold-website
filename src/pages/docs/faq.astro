@@ -1,0 +1,171 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro'
+---
+
+<DocsLayout title="FAQ" description="Common questions and objections answered.">
+  <article class="doc-content">
+    <h1>Frequently Asked Questions</h1>
+
+    <p>
+      These are the questions we hear most often. If your concern isn't here, <a
+        href="mailto:support@clearhold.io">contact us</a
+      >.
+    </p>
+
+    <h2>Business & Positioning</h2>
+
+    <h3>"Why not blockchain?"</h3>
+
+    <p>
+      Blockchain adds latency, cost, and complexity without solving the core problem. Escrow
+      disputes are about <strong>subjective human agreements</strong>, not cryptographic
+      verification. A smart contract can't determine if a design mockup meets spec.
+    </p>
+
+    <p>We provide deterministic, auditable decisions. That's what you need. Not proof-of-work.</p>
+
+    <h3>"Are you a payment processor?"</h3>
+
+    <p>
+      No. We're a payment-informed orchestration engine. You hold funds in your payment provider
+      (Stripe, Adyen, etc.). We track state and produce decisions. You execute payouts.
+    </p>
+
+    <p>
+      Think: <strong>state machine + decision engine</strong>, not payment gateway.
+    </p>
+
+    <h3>"Can you host our files/documents?"</h3>
+
+    <p>
+      No. We store <strong>references only</strong>: URI + content hash. You host files wherever you
+      want (S3, Google Drive, your own servers). We verify integrity via hash, never download
+      content.
+    </p>
+
+    <h3>"Do you have a dashboard?"</h3>
+
+    <p>
+      No. This is an API-first engine. If you need a dashboard, you build it on top of our API.
+      We're infrastructure, not SaaS.
+    </p>
+
+    <h2>Technical</h2>
+
+    <h3>"Can we override engine decisions?"</h3>
+
+    <p>
+      Yes, within limits. Operators can adjust the suggested ratio by <strong>±30%</strong>. Larger
+      deviations require justification and are audit-logged. This protects against both
+      rubber-stamping and arbitrary overrides.
+    </p>
+
+    <h3>"What happens if you go down?"</h3>
+
+    <p>
+      Your escrows continue in their current state. No automatic transitions occur. When we're back,
+      you resume where you left off. State is persistent and recoverable.
+    </p>
+
+    <p>For SLA guarantees, see your service agreement.</p>
+
+    <h3>"How do I replay a decision for audit?"</h3>
+
+    <p>
+      Every decision is deterministic. Call <code>GET /disputes/:id/recommendation</code> with the same
+      inputs stored in the audit log. You'll get the same output. Always.
+    </p>
+
+    <h3>"Do you support multi-currency?"</h3>
+
+    <p>
+      Yes. Currency is stored as an ISO 4217 code. Amounts are in minor units (cents). We don't do
+      currency conversion — that's your payment provider's job.
+    </p>
+
+    <h2>Security</h2>
+
+    <h3>"Why HMAC instead of OAuth/JWT?"</h3>
+
+    <p>
+      HMAC with nonces provides replay protection at the protocol level. No token refresh flows. No
+      session management. Every request is independently verifiable. This is how payment APIs work
+      (Stripe, Adyen, etc.).
+    </p>
+
+    <h3>"How do you handle PII?"</h3>
+
+    <p>
+      We store <strong>opaque actor IDs</strong>, not names, emails, or personal data. Your users
+      remain yours. We see <code>usr_abc123</code>, not "John Smith". Map IDs in your system.
+    </p>
+
+    <h3>"Is data encrypted?"</h3>
+
+    <p>Yes. TLS 1.3 in transit, AES-256 at rest. All API traffic is HTTPS-only. No exceptions.</p>
+
+    <h2>Legal & Liability</h2>
+
+    <h3>"Who's liable for wrong decisions?"</h3>
+
+    <p>
+      We provide recommendations. You apply decisions. Liability caps are defined in your service
+      agreement. Generally: we're liable for system failures within stated SLA, not for business
+      outcomes of decisions you approve.
+    </p>
+
+    <h3>"Do you hold funds in escrow?"</h3>
+
+    <p>
+      No. We never custody funds. "Escrow" in our context means <strong
+        >lifecycle orchestration</strong
+      >, not fund custody. You hold funds in your payment system.
+    </p>
+
+    <h3>"Can decisions be used in legal proceedings?"</h3>
+
+    <p>
+      Our audit log provides a forensic-grade trail of all events, inputs, and decisions. Whether
+      that's admissible in your jurisdiction is a question for your legal team, not us.
+    </p>
+
+    <h2>Integration</h2>
+
+    <h3>"Do you have SDKs?"</h3>
+
+    <p>
+      Not yet. SDKs are planned for a future release. For now, use direct HTTP with HMAC signing.
+      The API is simple enough that most integrations are &gt;100 lines of code.
+    </p>
+
+    <h3>"What's the rate limit?"</h3>
+
+    <p>
+      Standard tier: 100 req/min. Pro: 1,000 req/min. Enterprise: custom. Rate limit headers are in
+      every response.
+    </p>
+
+    <h3>"Do you support webhooks?"</h3>
+
+    <p>
+      Yes. All state transitions trigger HMAC-signed webhooks. Retry policy: exponential backoff up
+      to 5 attempts. Dead-lettered after that.
+    </p>
+  </article>
+</DocsLayout>
+
+<style>
+  .doc-content {
+    max-width: 800px;
+  }
+
+  h3 {
+    color: var(--color-accent);
+    font-size: 1.1rem;
+    margin-top: 2rem;
+  }
+
+  h2 + h3 {
+    margin-top: 1.5rem;
+  }
+</style>

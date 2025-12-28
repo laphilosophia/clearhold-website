@@ -1,0 +1,133 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro'
+---
+
+<DocsLayout title="Changelog" description="Engine versions and API changes.">
+  <article class="doc-content">
+    <h1>Changelog & Versioning</h1>
+
+    <p>This page tracks engine versions, API changes, and backward compatibility.</p>
+
+    <h2>Versioning Policy</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Versioning</th>
+          <th>Compatibility</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>API</td>
+          <td><code>/v1</code>, <code>/v2</code>, etc.</td>
+          <td>Breaking changes = new version</td>
+        </tr>
+        <tr>
+          <td>Decision Engine</td>
+          <td>SemVer (<code>v1.0.0</code>)</td>
+          <td>Weight changes = minor bump</td>
+        </tr>
+        <tr>
+          <td>Webhooks</td>
+          <td>Schema versioned</td>
+          <td>Additive only within version</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Backward Compatibility</h2>
+
+    <p>Within a major API version:</p>
+
+    <ul>
+      <li>✓ New endpoints may be added</li>
+      <li>✓ New optional fields may be added to responses</li>
+      <li>✓ New optional fields may be added to requests</li>
+      <li>✗ Existing fields will not be removed</li>
+      <li>✗ Existing field types will not change</li>
+      <li>✗ Required fields will not become required</li>
+    </ul>
+
+    <h2>Current Versions</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Version</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>API</td>
+          <td>v1</td>
+          <td>Stable</td>
+        </tr>
+        <tr>
+          <td>Decision Engine</td>
+          <td>v1.0.0</td>
+          <td>Stable</td>
+        </tr>
+        <tr>
+          <td>Webhook Schema</td>
+          <td>v1</td>
+          <td>Stable</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Changelog</h2>
+
+    <h3>2025-01-15 — v1.0.0 (Initial Release)</h3>
+
+    <p><strong>API</strong></p>
+    <ul>
+      <li>Initial release of <code>/v1</code> endpoints</li>
+      <li>Escrow lifecycle: CREATE → FUNDED → IN_PROGRESS → DELIVERED → COMPLETED</li>
+      <li>Dispute flow: OPEN → EVIDENCE_LOCKED → RESOLVED</li>
+      <li>HMAC authentication with replay protection</li>
+      <li>Idempotency support for all POST endpoints</li>
+    </ul>
+
+    <p><strong>Decision Engine</strong></p>
+    <ul>
+      <li>Initial weight configuration (v1.0.0)</li>
+      <li>Signals: deadline_met, deliverable_submitted, evidence_balance, completion_ratio</li>
+      <li>Operator override within ±30%</li>
+    </ul>
+
+    <p><strong>Webhooks</strong></p>
+    <ul>
+      <li>HMAC-signed webhook delivery</li>
+      <li>Exponential backoff retry (5 attempts)</li>
+      <li>Dead-letter after max retries</li>
+    </ul>
+
+    <h2>Deprecation Policy</h2>
+
+    <p>When a version is deprecated:</p>
+
+    <ol>
+      <li>Announcement made at least 6 months in advance</li>
+      <li>Deprecation header added to all responses</li>
+      <li>Migration guide published</li>
+      <li>Support continues for 12 months after deprecation</li>
+    </ol>
+
+    <p>We do not break <code>/v1</code> without a new <code>/v2</code>.</p>
+  </article>
+</DocsLayout>
+
+<style>
+  .doc-content {
+    max-width: 800px;
+  }
+
+  h3 {
+    color: var(--color-accent);
+    margin-top: 2rem;
+  }
+</style>

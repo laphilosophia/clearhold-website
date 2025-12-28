@@ -1,0 +1,104 @@
+---
+const links = [
+  {
+    title: 'Product',
+    items: [
+      { label: 'Features', href: '/#features' },
+      { label: 'Integration', href: '/docs/quick-start' },
+      { label: 'Security', href: '/docs/security' },
+    ],
+  },
+  {
+    title: 'Resources',
+    items: [
+      { label: 'Documentation', href: '/docs/mental-model' },
+      { label: 'API Reference', href: '/docs/api-reference' },
+      { label: 'Status', href: '#' },
+    ],
+  },
+  {
+    title: 'Company',
+    items: [
+      { label: 'About', href: '#' },
+      { label: 'Blog', href: '#' },
+      { label: 'Legal', href: '/docs/legal' },
+    ],
+  },
+]
+---
+
+<footer class="border-t border-zinc-900 bg-zinc-950/50 backdrop-blur-lg">
+  <div class="mx-auto max-w-7xl px-6 py-12 md:py-16 lg:px-8">
+    <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+      <div class="space-y-8">
+        <a href="/" class="flex items-center gap-2">
+          <span class="text-2xl">⬡</span>
+          <span class="text-xl font-bold tracking-tight text-white">Clearhold</span>
+        </a>
+        <p class="text-sm leading-6 text-zinc-400 max-w-xs">
+          The dispute-aware escrow orchestration engine for modern marketplaces. API-first,
+          deterministic, and secure.
+        </p>
+      </div>
+      <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
+        <div class="md:grid md:grid-cols-2 md:gap-8">
+          <div>
+            <h3 class="text-sm font-semibold leading-6 text-white">Product</h3>
+            <ul role="list" class="mt-6 space-y-4">
+              {
+                links[0].items.map((item) => (
+                  <li>
+                    <a
+                      href={item.href}
+                      class="text-sm leading-6 text-zinc-400 hover:text-white transition-colors">
+                      {item.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+          <div class="mt-10 md:mt-0">
+            <h3 class="text-sm font-semibold leading-6 text-white">Resources</h3>
+            <ul role="list" class="mt-6 space-y-4">
+              {
+                links[1].items.map((item) => (
+                  <li>
+                    <a
+                      href={item.href}
+                      class="text-sm leading-6 text-zinc-400 hover:text-white transition-colors">
+                      {item.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+        <div class="md:grid md:grid-cols-2 md:gap-8">
+          <div>
+            <h3 class="text-sm font-semibold leading-6 text-white">Company</h3>
+            <ul role="list" class="mt-6 space-y-4">
+              {
+                links[2].items.map((item) => (
+                  <li>
+                    <a
+                      href={item.href}
+                      class="text-sm leading-6 text-zinc-400 hover:text-white transition-colors">
+                      {item.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24">
+      <p class="text-xs leading-5 text-zinc-500">
+        &copy; {new Date().getFullYear()} Clearhold Inc. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>

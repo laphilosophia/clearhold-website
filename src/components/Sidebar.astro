@@ -1,0 +1,72 @@
+---
+const navItems = [
+  {
+    title: 'Concepts',
+    items: [
+      { href: '/docs/mental-model', label: 'Mental Model' },
+      { href: '/docs/architecture', label: 'Architecture' },
+      { href: '/docs/decision-engine', label: 'Decision Engine' },
+    ],
+  },
+  {
+    title: 'Guides',
+    items: [
+      { href: '/docs/quick-start', label: 'Quick Start' },
+      { href: '/docs/core-concepts', label: 'Core Concepts' },
+    ],
+  },
+  {
+    title: 'Reference',
+    items: [
+      { href: '/docs/api-reference', label: 'API Reference' },
+      { href: '/docs/security', label: 'Security & Trust' },
+      { href: '/docs/sdks', label: 'SDKs' },
+    ],
+  },
+  {
+    title: 'Support',
+    items: [
+      { href: '/docs/faq', label: 'FAQ' },
+      { href: '/docs/changelog', label: 'Changelog' },
+      { href: '/docs/legal', label: 'Legal' },
+      { href: '/docs/pricing', label: 'Pricing' },
+    ],
+  },
+]
+
+const currentPath = Astro.url.pathname
+function isActive(href: string) {
+  return currentPath === href || currentPath.startsWith(href + '/')
+}
+---
+
+<nav class="lg:text-sm lg:leading-6 relative">
+  <div class="sticky top-24 -ml-0.5 pointer-events-none">
+    <div class="h-10 bg-gradient-to-b from-bg-base to-transparent"></div>
+    <div class="pointer-events-auto bg-bg-base/80 backdrop-blur-sm px-1">
+      {
+        navItems.map((section) => (
+          <div class="mb-8">
+            <h5 class="mb-3 font-semibold text-zinc-200">{section.title}</h5>
+            <ul class="space-y-2 border-l border-zinc-800">
+              {section.items.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    class:list={[
+                      'block border-l -ml-px pl-4 transition-colors hover:border-zinc-400 hover:text-zinc-300',
+                      isActive(item.href)
+                        ? 'border-indigo-500 text-indigo-400 font-medium'
+                        : 'border-transparent text-zinc-500',
+                    ]}>
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</nav>

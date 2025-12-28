@@ -1,0 +1,237 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro'
+---
+
+<DocsLayout title="Decision Engine" description="How the deterministic scoring engine works.">
+  <article class="doc-content">
+    <h1>Decision Engine</h1>
+
+    <p>
+      The decision engine is the core of dispute resolution. It produces deterministic
+      recommendations based on weighted signals.
+    </p>
+
+    <blockquote>We recommend. You enforce.</blockquote>
+
+    <h2>How It Works</h2>
+
+    <ol>
+      <li>Collect all dispute signals (timing, evidence, history)</li>
+      <li>Apply canonical weights to each signal</li>
+      <li>Calculate split ratio and confidence</li>
+      <li>Return recommendation</li>
+    </ol>
+
+    <p>
+      The engine never makes side effects. Given the same inputs, it produces the same outputs.
+      Always.
+    </p>
+
+    <h2>Input Signals</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Signal</th>
+          <th>Description</th>
+          <th>Weight</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>deadline_met</code></td>
+          <td>Was the milestone deadline met?</td>
+          <td>+20</td>
+        </tr>
+        <tr>
+          <td><code>deliverable_submitted</code></td>
+          <td>Was any deliverable submitted?</td>
+          <td>+30</td>
+        </tr>
+        <tr>
+          <td><code>evidence_balance</code></td>
+          <td>Ratio of evidence from each party</td>
+          <td>±15</td>
+        </tr>
+        <tr>
+          <td><code>completion_ratio</code></td>
+          <td>Estimated completion percentage</td>
+          <td>Proportional</td>
+        </tr>
+        <tr>
+          <td><code>dispute_reason</code></td>
+          <td>Category of the dispute</td>
+          <td>Variable</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Weights (v1.0.0)</h2>
+
+    <p>Current canonical weights:</p>
+
+    <pre><code>{`{
+  "deadline_met": 0.20,
+  "deliverable_submitted": 0.30,
+  "evidence_balance": 0.15,
+  "completion_ratio": 0.25,
+  "dispute_context": 0.10
+}`}</code></pre>
+
+    <p>Weight changes require an RFC and version bump. Weights do not change without notice.</p>
+
+    <h2>Output Structure</h2>
+
+    <pre><code>{`{
+  "recommendation": "SPLIT",
+  "confidence": 0.72,
+  "signals": [
+    "deadline_missed",
+    "deliverable_partial",
+    "evidence_balanced"
+  ],
+  "suggested_ratio": {
+    "client": 0.40,
+    "contractor": 0.60
+  },
+  "engine_version": "v1.0.0"
+}`}</code></pre>
+
+    <h3>Field Meanings</h3>
+
+    <table>
+      <tbody>
+        <tr>
+          <th><code>recommendation</code></th>
+          <td>FULL_RELEASE, FULL_REFUND, or SPLIT</td>
+        </tr>
+        <tr>
+          <th><code>confidence</code></th>
+          <td>0.0 to 1.0 — how certain the engine is</td>
+        </tr>
+        <tr>
+          <th><code>signals</code></th>
+          <td>List of factors that influenced the decision</td>
+        </tr>
+        <tr>
+          <th><code>suggested_ratio</code></th>
+          <td>Recommended split (must sum to 1.0)</td>
+        </tr>
+        <tr>
+          <th><code>engine_version</code></th>
+          <td>Version of weights used</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Decision Types</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Meaning</th>
+          <th>Ratio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>FULL_RELEASE</code></td>
+          <td>Contractor delivered, client pays</td>
+          <td>client: 0, contractor: 1</td>
+        </tr>
+        <tr>
+          <td><code>FULL_REFUND</code></td>
+          <td>Contractor failed, client gets refund</td>
+          <td>client: 1, contractor: 0</td>
+        </tr>
+        <tr>
+          <td><code>SPLIT</code></td>
+          <td>Partial completion, shared outcome</td>
+          <td>Variable</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Operator Override</h2>
+
+    <p>The engine produces a recommendation. As the operator, you can adjust it within bounds:</p>
+
+    <ul>
+      <li>Maximum adjustment: <strong>±30%</strong> from suggested ratio</li>
+      <li>Justification required for all decisions</li>
+      <li>Override is audit-logged</li>
+    </ul>
+
+    <pre><code>{`// Engine suggested: { client: 0.40, contractor: 0.60 }
+// Allowed range: { client: 0.10-0.70, contractor: 0.30-0.90 }
+
+// Valid override
+{
+  "decision": "SPLIT",
+  "final_ratio": { "client": 0.35, "contractor": 0.65 },
+  "justification": "Milestone was late but functional"
+}
+
+// Invalid (exceeds ±30%)
+{
+  "decision": "SPLIT",
+  "final_ratio": { "client": 0.05, "contractor": 0.95 }
+}  // Rejected: out of bounds`}</code></pre>
+
+    <h2>Determinism Guarantee</h2>
+
+    <p>The engine is a pure function:</p>
+
+    <ul>
+      <li>No external API calls</li>
+      <li>No random number generation</li>
+      <li>No current time access (time is injected)</li>
+      <li>Same inputs → Same outputs (always)</li>
+    </ul>
+
+    <p>
+      This means any decision can be <strong>replayed and verified</strong> from the audit log.
+    </p>
+
+    <h2>What Decisions Mean</h2>
+
+    <p>A decision is:</p>
+
+    <ul>
+      <li>✓ A defensible recommendation</li>
+      <li>✓ Based on recorded signals</li>
+      <li>✓ Reproducible and auditable</li>
+    </ul>
+
+    <p>A decision is NOT:</p>
+
+    <ul>
+      <li>✗ A legal judgment</li>
+      <li>✗ A payment instruction</li>
+      <li>✗ Automatically enforced</li>
+    </ul>
+
+    <blockquote>You receive ratios. You execute payouts. We don't move money.</blockquote>
+
+    <div class="next-link">
+      <a href="/docs/faq">Next: FAQ →</a>
+    </div>
+  </article>
+</DocsLayout>
+
+<style>
+  .doc-content {
+    max-width: 800px;
+  }
+
+  .next-link {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .next-link a {
+    font-weight: 500;
+  }
+</style>

@@ -1,0 +1,247 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro'
+---
+
+<DocsLayout
+  title="Core Concepts"
+  description="Escrow, Milestone, Dispute, Evidence, and Decision explained."
+>
+  <article class="doc-content">
+    <h1>Core Concepts</h1>
+
+    <p>
+      These are the primitives of the Clearhold engine. Understanding these is essential for correct
+      integration.
+    </p>
+
+    <h2>Escrow</h2>
+
+    <p>An escrow is the top-level container for a transactional agreement between two parties.</p>
+
+    <table>
+      <tbody>
+        <tr>
+          <th>Definition</th>
+          <td>A state machine tracking funds and deliverables between client and contractor</td>
+        </tr>
+        <tr>
+          <th>Lifecycle</th>
+          <td>CREATED → FUNDED → IN_PROGRESS → DELIVERED → COMPLETED</td>
+        </tr>
+        <tr>
+          <th>Boundary</th>
+          <td>We track state. You hold funds. We never touch money.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Key Properties</h3>
+
+    <ul>
+      <li><code>external_id</code> — Your reference (order ID, project ID, etc.)</li>
+      <li><code>total_amount</code> — Total value in minor units (cents)</li>
+      <li><code>currency</code> — ISO 4217 code (USD, EUR, etc.)</li>
+      <li><code>state</code> — Current lifecycle position</li>
+    </ul>
+
+    <h2>Milestone</h2>
+
+    <p>A milestone represents a phase of work with an associated amount and deadline.</p>
+
+    <table>
+      <tbody>
+        <tr>
+          <th>Definition</th>
+          <td>A sub-unit of an escrow with its own deadline and payout amount</td>
+        </tr>
+        <tr>
+          <th>Lifecycle</th>
+          <td>Created with escrow → Deliverable submitted → Approved or Disputed</td>
+        </tr>
+        <tr>
+          <th>Boundary</th>
+          <td>We track deadlines and completion. You define what "done" means.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Milestone Sum Rule</h3>
+
+    <p>
+      Milestone amounts <strong>must equal</strong> escrow total. API rejects mismatched sums.
+    </p>
+
+    <pre><code>{`// Valid
+total_amount: 50000
+milestones: [
+  { amount: 20000 },
+  { amount: 30000 }
+]  // Sum = 50000 ✓
+
+// Invalid → 409 Conflict
+total_amount: 50000
+milestones: [
+  { amount: 20000 },
+  { amount: 25000 }
+]  // Sum = 45000 ✗`}</code></pre>
+
+    <h2>Dispute</h2>
+
+    <p>A dispute is opened when a party contests the escrow outcome.</p>
+
+    <table>
+      <tbody>
+        <tr>
+          <th>Definition</th>
+          <td>A formal claim that triggers the evidence and decision flow</td>
+        </tr>
+        <tr>
+          <th>Lifecycle</th>
+          <td>OPEN → EVIDENCE_LOCKED → RESOLVED</td>
+        </tr>
+        <tr>
+          <th>Boundary</th>
+          <td>One active dispute per escrow. Closed disputes cannot be reopened.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Reason Codes</h3>
+
+    <ul>
+      <li><code>DELIVERABLE_INCOMPLETE</code> — Work not finished</li>
+      <li><code>DELIVERABLE_NOT_AS_DESCRIBED</code> — Work doesn't match spec</li>
+      <li><code>DELIVERABLE_LATE</code> — Deadline missed</li>
+      <li><code>PAYMENT_ISSUE</code> — Funds-related dispute</li>
+      <li><code>COMMUNICATION_BREAKDOWN</code> — Process failure</li>
+      <li><code>OTHER</code> — Catch-all</li>
+    </ul>
+
+    <h2>Evidence</h2>
+
+    <p>Evidence is submitted during a dispute's open phase.</p>
+
+    <table>
+      <tbody>
+        <tr>
+          <th>Definition</th>
+          <td>A reference to external proof supporting a party's claim</td>
+        </tr>
+        <tr>
+          <th>Storage</th>
+          <td>We store URI + content hash. We never download or host files.</td>
+        </tr>
+        <tr>
+          <th>Boundary</th>
+          <td>You host files. We verify hashes. We reference, not store.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Evidence Window</h3>
+
+    <ul>
+      <li>Default window: 72 hours from dispute open</li>
+      <li>Can be locked manually via <code>POST /disputes/:id/lock</code></li>
+      <li>After lock: no new evidence accepted</li>
+    </ul>
+
+    <h2>Decision</h2>
+
+    <p>A decision resolves a dispute and determines fund allocation.</p>
+
+    <table>
+      <tbody>
+        <tr>
+          <th>Definition</th>
+          <td>The final resolution of a dispute, specifying payout ratios</td>
+        </tr>
+        <tr>
+          <th>Types</th>
+          <td>FULL_RELEASE (100% contractor), FULL_REFUND (100% client), SPLIT</td>
+        </tr>
+        <tr>
+          <th>Boundary</th>
+          <td>We calculate. You execute. We never move money.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Decision Flow</h3>
+
+    <ol>
+      <li><strong>Engine recommendation</strong> — Deterministic calculation based on signals</li>
+      <li><strong>Operator review</strong> — Human can adjust within ±30%</li>
+      <li><strong>Final decision</strong> — Immutable, audit-logged</li>
+      <li><strong>Webhook dispatch</strong> — You receive the payout breakdown</li>
+    </ol>
+
+    <h2>Lifecycle Diagram</h2>
+
+    <pre
+      class="lifecycle-diagram">{`
+┌─────────┐
+│ Escrow  │
+│ Created │
+└────┬────┘
+     │ Payment declared
+     ▼
+┌─────────┐
+│ Funded  │
+└────┬────┘
+     │ Work begins
+     ▼
+┌──────────────┐
+│ In Progress  │───────┬────────────────────────┐
+└──────────────┘       │                        │
+     │                 │ Dispute opened          │
+     │ Deliverable     ▼                        │
+     │ submitted  ┌─────────┐                   │
+     │            │ Dispute │                   │
+     ▼            │  OPEN   │                   │
+┌───────────┐    └────┬────┘                   │
+│ Delivered │         │ Evidence locked         │
+└─────┬─────┘         ▼                        │
+      │          ┌─────────────┐               │
+      │          │ Evidence    │               │
+      │          │ Locked      │               │
+      │          └──────┬──────┘               │
+      │                 │ Decision applied      │
+      │                 ▼                       │
+      │          ┌──────────┐                  │
+      │          │ Resolved │                  │
+      │          └──────────┘                  │
+      │                                        │
+      │ No dispute                             │
+      ▼                                        │
+┌───────────┐                                  │
+│ Completed │◀─────────────────────────────────┘
+└───────────┘
+`}</pre>
+
+    <div class="next-link">
+      <a href="/docs/api-reference">Next: API Reference →</a>
+    </div>
+  </article>
+</DocsLayout>
+
+<style>
+  .doc-content {
+    max-width: 800px;
+  }
+
+  .lifecycle-diagram {
+    font-size: 0.65rem;
+    overflow-x: auto;
+  }
+
+  .next-link {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .next-link a {
+    font-weight: 500;
+  }
+</style>
