@@ -18,13 +18,13 @@ function isActive(href: string): boolean {
 }
 ---
 
-<nav class="sticky top-0 z-50 w-full border-b border-white/5 bg-[#0d0d0f]/80 backdrop-blur-xl">
+<nav class="sticky top-0 z-50 w-full border-b border-white/5 bg-bg-base/80 backdrop-blur-xl">
   <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
     <!-- Logo -->
     <a href="/" class="flex items-center gap-3 transition-opacity hover:opacity-80 group">
       <div class="relative">
         <div
-          class="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg blur-md opacity-50 group-hover:opacity-75 transition-opacity"
+          class="absolute inset-0 bg-linear-to-r from-indigo-500 to-purple-500 blur-md opacity-50 group-hover:opacity-75 transition-opacity"
         >
         </div>
         <span class="relative text-2xl">⬡</span>
@@ -44,7 +44,7 @@ function isActive(href: string): boolean {
             ]}>
             {item.label}
             {isActive(item.href) && (
-              <span class="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" />
+              <span class="absolute -bottom-1 left-0 right-0 h-0.5 bg-linear-to-r from-indigo-500 to-purple-500 rounded-full" />
             )}
           </a>
         ))
@@ -62,7 +62,7 @@ function isActive(href: string): boolean {
         href="https://github.com/clearhold/engine"
         target="_blank"
         rel="noopener noreferrer"
-        class="glass rounded-full px-4 py-1.5 text-xs font-medium text-white transition-all hover:bg-white/[0.08]"
+        class="glass rounded-full px-4 py-1.5 text-xs font-medium text-white transition-all hover:bg-white/8"
       >
         GitHub v1.0.0
       </a>
