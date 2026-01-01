@@ -33,6 +33,28 @@
   --font-mono: 'Space Mono', 'Fira Code', monospace;
 }
 
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: var(--color-bg-hover) var(--color-bg-base);
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 24px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--color-bg-base);
+  border-radius: 12px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-bg-hover);
+  border-radius: 12px;
+  border: 3px solid var(--color-bg-base);
+}
+
 /* Base Styles */
 html {
   background-color: var(--color-bg-base);
@@ -64,16 +86,6 @@ h6 {
 h1 {
   font-size: 3rem;
   font-weight: 600;
-  background: linear-gradient(
-    135deg,
-    #f4f4f5 0%,
-    var(--color-accent) 50%,
-    var(--color-accent-hover) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: inline-block;
 }
 
 h2 {
@@ -86,7 +98,7 @@ h2 {
 
 h3 {
   font-size: 1.25rem;
-  margin-top: 2rem;
+  margin-top: 3rem;
   color: #d4d4d8;
 }
 
@@ -96,14 +108,8 @@ p {
 }
 
 a:not([data-button]) {
-  color: var(--color-accent);
   text-decoration: none;
   transition: all 0.2s ease;
-}
-
-a:not([data-button]):hover {
-  color: var(--color-accent-hover);
-  text-shadow: 0 0 20px rgba(129, 140, 248, 0.3);
 }
 
 /* Code Blocks */
@@ -116,41 +122,29 @@ code {
 .prose pre {
   background: linear-gradient(145deg, #131316 0%, #1a1a1e 100%);
   border: 1px solid var(--color-border);
-  padding: 1.5rem;
+  padding-inline: 1.5rem;
+  padding-block: 2rem;
   margin-top: 1rem;
   overflow-x: auto;
   font-size: 0.875rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03);
   position: relative;
-}
-
-/* Subtle header bar for code blocks */
-.prose pre::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1rem;
-  background: #1a1a1e;
-  border-bottom: 1px solid var(--color-border);
+  border-radius: 0.5rem;
 }
 
 .prose pre code {
   background: transparent;
   padding: 0;
   border: none;
-  color: #d4d4d8;
   display: block;
-  margin-top: 1rem;
 }
 
 /* Inline code */
 .prose :not(pre) > code {
-  background: var(--color-accent-subtle);
-  color: #c4b5fd;
+  background: var(--color-bg-base);
+  color: var(--color-foreground);
   padding: 0.2rem 0.5rem;
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid var(--color-border);
   font-size: 0.875em;
 }
 
@@ -184,8 +178,9 @@ blockquote p {
 /* Tables */
 table {
   width: 100%;
+  margin-top: 1rem;
   border-collapse: collapse;
-  margin: 2rem 0;
+  border-radius: 0.5rem;
   overflow: hidden;
 }
 
@@ -209,13 +204,14 @@ tr:hover td {
 /* Lists */
 ul,
 ol {
+  margin-top: 1rem;
   padding-left: 0.5rem;
   color: var(--color-text-secondary);
   list-style: none;
 }
 
 li {
-  margin: 0.25rem 0;
+  margin: 0.35rem 0;
 }
 
 li::marker {
@@ -329,13 +325,14 @@ li::marker {
 
 .bg-grid-soft {
   background-size: 50px 50px;
-  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
 }
 
 .bg-dots-soft {
   background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 24px 24px;
+  background-attachment: fixed;
 }
 
 .bg-gradient-radial {
@@ -359,11 +356,131 @@ li::marker {
 }
 
 .glass {
-  background: rgba(26, 26, 30, 0.6);
+  background: rgba(26, 26, 30, 0.2);
   backdrop-filter: blur(12px);
-  border: 1px solid var(--color-border);
 }
 
 .glow-accent {
   box-shadow: 0 0 30px rgba(129, 140, 248, 0.15);
+}
+
+/* Flow Diagram Components */
+.diagram-container {
+  padding: 2.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  margin: 2rem 0;
+  overflow-x: auto;
+}
+
+.flow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.flow-node {
+  padding: 0.875rem 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  text-align: center;
+  min-width: 160px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0.25rem;
+}
+
+.flow-node:hover {
+  border-color: var(--color-accent);
+  background: rgba(99, 102, 241, 0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.flow-node[data-special='true'] {
+  border-color: rgba(99, 102, 241, 0.3);
+  background: linear-gradient(to bottom right, rgba(99, 102, 241, 0.05), transparent);
+}
+
+.flow-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, rgba(99, 102, 241, 0.5), transparent);
+  position: relative;
+  margin: 0.25rem 0;
+}
+
+.flow-line::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid rgba(99, 102, 241, 0.3);
+}
+
+.flow-label {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.625rem;
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.flow-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  width: 100%;
+}
+
+.flow-branch {
+  position: relative;
+}
+
+.flow-branch::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  height: 1px;
+  width: 50%;
+  background: rgba(99, 102, 241, 0.5);
+}
+
+.flow-branch--left::before {
+  right: 0;
+}
+
+.flow-branch--right::before {
+  left: 0;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* mermaid diagrams */
+
+.cluster rect {
+  fill: transparent !important;
+  stroke: none !important;
 }

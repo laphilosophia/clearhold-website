@@ -1,4 +1,5 @@
 ---
+import CodeBlock from '../../components/ui/CodeBlock.astro'
 import DocsLayout from '../../layouts/DocsLayout.astro'
 ---
 
@@ -70,19 +71,24 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
 
     <p>Current canonical weights:</p>
 
-    <pre><code>{`{
+    <CodeBlock
+      lang="json"
+      code={`{
   "deadline_met": 0.20,
   "deliverable_submitted": 0.30,
   "evidence_balance": 0.15,
   "completion_ratio": 0.25,
   "dispute_context": 0.10
-}`}</code></pre>
+}`}
+    />
 
     <p>Weight changes require an RFC and version bump. Weights do not change without notice.</p>
 
     <h2>Output Structure</h2>
 
-    <pre><code>{`{
+    <CodeBlock
+      lang="json"
+      code={`{
   "recommendation": "SPLIT",
   "confidence": 0.72,
   "signals": [
@@ -95,7 +101,8 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
     "contractor": 0.60
   },
   "engine_version": "v1.0.0"
-}`}</code></pre>
+}`}
+    />
 
     <h3>Field Meanings</h3>
 
@@ -163,7 +170,9 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
       <li>Override is audit-logged</li>
     </ul>
 
-    <pre><code>{`// Engine suggested: { client: 0.40, contractor: 0.60 }
+    <CodeBlock
+      lang="json"
+      code={`// Engine suggested: { client: 0.40, contractor: 0.60 }
 // Allowed range: { client: 0.10-0.70, contractor: 0.30-0.90 }
 
 // Valid override
@@ -177,7 +186,8 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
 {
   "decision": "SPLIT",
   "final_ratio": { "client": 0.05, "contractor": 0.95 }
-}  // Rejected: out of bounds`}</code></pre>
+}  // Rejected: out of bounds`}
+    />
 
     <h2>Determinism Guarantee</h2>
 
@@ -215,7 +225,7 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
     <blockquote>You receive ratios. You execute payouts. We don't move money.</blockquote>
 
     <div class="next-link">
-      <a href="/docs/faq">Next: FAQ →</a>
+      <a href="/docs/quick-start">Next: Quick Start →</a>
     </div>
   </article>
 </DocsLayout>

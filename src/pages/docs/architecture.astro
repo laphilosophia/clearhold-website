@@ -1,4 +1,5 @@
 ---
+import CodeBlock from '../../components/ui/CodeBlock.astro'
 import DocsLayout from '../../layouts/DocsLayout.astro'
 ---
 
@@ -34,8 +35,9 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
 
     <p>Every API call produces events. Events are immutable. State is projected from events.</p>
 
-    <pre><code>{`// Example: Dispute Resolution Event
-{
+    <CodeBlock
+      lang="json"
+      code={`{
   "event_type": "DISPUTE_RESOLVED",
   "entity_type": "dispute",
   "entity_id": "dsp_abc123",
@@ -49,7 +51,8 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
     "final_ratio": { "client": 0.4, "contractor": 0.6 }
   },
   "timestamp": "2025-01-15T14:30:00Z"
-}`}</code></pre>
+}`}
+    />
 
     <h2>Deterministic Guarantees</h2>
 
@@ -142,7 +145,7 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
     <p>The engine is the API. The API is the engine.</p>
 
     <div class="next-link">
-      <a href="/docs/quick-start">Next: Quick Start →</a>
+      <a href="/docs/decision-engine">Next: Decision Engine →</a>
     </div>
   </article>
 </DocsLayout>

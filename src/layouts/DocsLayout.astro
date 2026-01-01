@@ -18,22 +18,32 @@ const { title, description, class: className } = Astro.props
       startOnLoad: true,
       theme: 'base',
       themeVariables: {
-        primaryColor: '#1a1a1e',
-        primaryTextColor: '#d4d4d8',
-        primaryBorderColor: '#818cf8',
-        lineColor: '#a78bfa',
-        secondaryColor: '#131316',
-        tertiaryColor: '#0d0d0f',
-        fontFamily: 'Inter, system-ui, sans-serif',
+        primaryColor: 'rgba(99, 102, 241, 0.05)',
+        primaryTextColor: '#f4f4f5',
+        primaryBorderColor: 'rgba(99, 102, 241, 0.4)',
+        lineColor: '#6366f1',
+        secondaryColor: '#18181b',
+        tertiaryColor: '#09090b',
+        fontFamily: '"Space Mono", monospace',
+        fontSize: '13px',
+        edgeLabelBackground: '#09090b',
+        nodeBorder: '1px',
+        mainBkg: 'rgba(18, 18, 20, 0.6)',
+      },
+      flowchart: {
+        curve: 'basis',
+        nodeSpacing: 50,
+        rankSpacing: 40,
+        htmlLabels: true,
       },
     })
   </script>
 
-  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8 pt-24">
     <div class="lg:grid lg:grid-cols-12 lg:gap-10">
       <!-- Sidebar (Desktop) -->
       <aside
-        class="hidden lg:block lg:col-span-3 py-10 sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto scrollbar-thin"
+        class="hidden lg:block lg:col-span-3 py-10 sticky top-24 h-[calc(100vh-5rem)] overflow-y-auto scrollbar-thin"
       >
         <Sidebar />
       </aside>

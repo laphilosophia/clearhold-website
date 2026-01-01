@@ -6,6 +6,7 @@ const links = [
       { label: 'Features', href: '/#features' },
       { label: 'Integration', href: '/docs/quick-start' },
       { label: 'Security', href: '/docs/security' },
+      { label: 'Pricing', href: '/pricing' },
     ],
   },
   {
@@ -31,19 +32,40 @@ const links = [
   <div class="mx-auto max-w-7xl px-6 py-12 md:py-16 lg:px-8">
     <div class="xl:grid xl:grid-cols-3 xl:gap-8">
       <div class="space-y-8">
-        <a href="/" class="flex items-center gap-2">
-          <span class="text-2xl">⬡</span>
-          <span class="text-xl font-bold tracking-tight text-white">Clearhold</span>
+        <a href="/" class="flex items-center gap-3 transition-opacity hover:opacity-80 group">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 300 300" class="size-7">
+            <path
+              fill="url(#a)"
+              d="M145.297 261.297a4 4 0 0 0 5.657 0l130.842-130.818a4 4 0 0 0 0-5.658l-91.717-91.705a4 4 0 0 0-5.657 0l-28.369 28.38a4 4 0 0 0 0 5.657l43.818 43.818a4 4 0 0 1 0 5.657l-25.58 25.57a4 4 0 0 1-5.656-.001l-37.155-37.155a4 4 0 0 0-5.658.002l-65.571 65.64a4 4 0 0 0 .001 5.655l11.845 11.845a4 4 0 0 0 5.657 0l46.983-46.983a4 4 0 0 1 5.642-.016l1.216 1.203a4 4 0 0 1 .02 5.668l-46.894 47.028a4 4 0 0 0 .004 5.653l11.847 11.847a4 4 0 0 0 5.657 0l49.846-49.846a4 4 0 0 1 5.654-.002l1.175 1.173a4 4 0 0 1 .002 5.66l-49.852 49.84a4 4 0 0 0 0 5.657l11.843 11.843a4 4 0 0 0 5.657 0l49.848-49.848a4 4 0 0 1 5.652-.005l1.245 1.24a4.001 4.001 0 0 1 .005 5.663l-49.85 49.838a4 4 0 0 0 0 5.657l11.843 11.843Zm-95.65-99.462a4 4 0 0 0 5.656 0l70.444-70.445a4 4 0 0 1 5.657 0l37.168 37.157a4 4 0 0 0 5.656 0l12.156-12.156a4 4 0 0 0 0-5.657l-76.43-76.418a4 4 0 0 0-5.657 0l-88.256 88.268a4 4 0 0 0 .001 5.657l33.605 33.594Z"
+            ></path>
+            <defs>
+              <linearGradient
+                id="a"
+                x1="149"
+                x2="149"
+                y1="98"
+                y2="329.5"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stop-color="#FFFFFF"></stop>
+                <stop offset="1" stop-color="#FFFFFF"></stop>
+              </linearGradient>
+            </defs>
+          </svg>
+
+          <span class="text-lg font-semibold tracking-tight text-white">Clearhold</span>
         </a>
+
         <p class="text-sm leading-6 text-zinc-400 max-w-xs">
-          The dispute-aware escrow orchestration engine for modern marketplaces. API-first,
-          deterministic, and secure.
+          The dispute-aware escrow orchestration engine for modern marketplaces. <br />
+          API-first, deterministic, and secure.
         </p>
       </div>
+
       <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
         <div class="md:grid md:grid-cols-2 md:gap-8">
           <div>
-            <h3 class="text-sm font-semibold leading-6 text-white">Product</h3>
+            <h3 class="text-sm font-semibold leading-6 text-white mt-0!">Product</h3>
             <ul role="list" class="mt-6 space-y-4">
               {
                 links[0].items.map((item) => (
@@ -59,7 +81,7 @@ const links = [
             </ul>
           </div>
           <div class="mt-10 md:mt-0">
-            <h3 class="text-sm font-semibold leading-6 text-white">Resources</h3>
+            <h3 class="text-sm font-semibold leading-6 text-white mt-0!">Resources</h3>
             <ul role="list" class="mt-6 space-y-4">
               {
                 links[1].items.map((item) => (
@@ -77,7 +99,7 @@ const links = [
         </div>
         <div class="md:grid md:grid-cols-2 md:gap-8">
           <div>
-            <h3 class="text-sm font-semibold leading-6 text-white">Company</h3>
+            <h3 class="text-sm font-semibold leading-6 text-white mt-0!">Company</h3>
             <ul role="list" class="mt-6 space-y-4">
               {
                 links[2].items.map((item) => (
@@ -95,9 +117,14 @@ const links = [
         </div>
       </div>
     </div>
-    <div class="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24">
+    <div
+      class="flex items-center justify-between mt-16 border-t border-white/10 pt-4 sm:mt-20 lg:mt-24"
+    >
       <p class="text-xs leading-5 text-zinc-500">
         &copy; {new Date().getFullYear()} Clearhold Inc. All rights reserved.
+      </p>
+      <p class="text-xs leading-5 text-zinc-500">
+        Made for you, made by <strong>Clearhold</strong>
       </p>
     </div>
   </div>

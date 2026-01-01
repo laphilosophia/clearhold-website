@@ -10,7 +10,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
   description="API-first dispute-aware escrow orchestration engine for your platform."
 >
   <!-- Hero Section -->
-  <section class="relative pt-24 pb-40 lg:pt-36 lg:pb-52 overflow-hidden">
+  <section class="relative py-36 overflow-hidden">
     <!-- Animated Background Orbs -->
     <div class="absolute inset-0 pointer-events-none overflow-hidden">
       <!-- Escrow Flow Animation -->
@@ -88,7 +88,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
       <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card class="animate-fade-in-up">
           <div
-            class="mb-5 inline-flex h-12 w-12 items-center justify-center bg-linear-to-br from-accent/20 to-accent-hover/20 border border-white/5"
+            class="mb-5 inline-flex h-12 w-12 items-center justify-center bg-linear-to-br from-accent/20 to-accent-hover/20 border border-white/5 rounded-full"
           >
             <svg
               class="h-6 w-6 text-accent-hover"
@@ -113,7 +113,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 
         <Card class="animate-fade-in-up animate-delay-100">
           <div
-            class="mb-5 inline-flex h-12 w-12 items-center justify-center bg-linear-to-br from-accent/20 to-accent-hover/20 border border-white/5"
+            class="mb-5 inline-flex h-12 w-12 items-center justify-center bg-linear-to-br from-accent/20 to-accent-hover/20 border border-white/5 rounded-full"
           >
             <svg
               class="h-6 w-6 text-accent-hover"
@@ -137,7 +137,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 
         <Card class="animate-fade-in-up animate-delay-200">
           <div
-            class="mb-5 inline-flex h-12 w-12 items-center justify-center bg-linear-to-br from-accent/20 to-accent-hover/20 border border-white/5"
+            class="mb-5 inline-flex h-12 w-12 items-center justify-center bg-linear-to-br from-accent/20 to-accent-hover/20 border border-white/5 rounded-full"
           >
             <svg
               class="h-6 w-6 text-accent-hover"
@@ -173,7 +173,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
             <div class="flex gap-5 group">
               <div class="flex-none">
                 <div
-                  class="w-10 h-10 bg-linear-to-br from-accent/20 to-accent-hover/20 border border-white/10 flex items-center justify-center font-mono text-sm text-accent group-hover:border-accent/50 transition-colors"
+                  class="w-10 h-10 bg-linear-to-br from-accent/20 to-accent-hover/20 border border-white/10 flex items-center justify-center font-mono text-sm text-accent group-hover:border-accent/50 transition-colors rounded-full"
                 >
                   01
                 </div>
@@ -188,7 +188,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
             <div class="flex gap-5 group">
               <div class="flex-none">
                 <div
-                  class="w-10 h-10 bg-linear-to-br from-accent/20 to-accent-hover/20 border border-white/10 flex items-center justify-center font-mono text-sm text-accent group-hover:border-accent/50 transition-colors"
+                  class="w-10 h-10 bg-linear-to-br from-accent/20 to-accent-hover/20 border border-white/10 flex items-center justify-center font-mono text-sm text-accent group-hover:border-accent/50 transition-colors rounded-full"
                 >
                   02
                 </div>
@@ -203,7 +203,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
             <div class="flex gap-5 group">
               <div class="flex-none">
                 <div
-                  class="w-10 h-10 bg-linear-to-br from-accent/20 to-accent-hover/20 border border-white/10 flex items-center justify-center font-mono text-sm text-accent group-hover:border-accent/50 transition-colors"
+                  class="w-10 h-10 bg-linear-to-br from-accent/20 to-accent-hover/20 border border-white/10 flex items-center justify-center font-mono text-sm text-accent group-hover:border-accent/50 transition-colors rounded-full"
                 >
                   03
                 </div>
@@ -223,7 +223,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
         </div>
 
         <div class="mt-16 lg:mt-0 animate-fade-in-up animate-delay-200">
-          <div class="glass p-1.5 glow-accent">
+          <div class="glass p-1.5">
             <div class="bg-bg-base p-5">
               <div class="flex items-center gap-2 mb-5 border-b border-white/5 pb-4">
                 <div class="flex gap-1.5">
@@ -266,28 +266,27 @@ import BaseLayout from '../layouts/BaseLayout.astro'
         </p>
       </div>
 
-      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 max-w-5xl mx-auto">
-        <!-- Pay-as-you-go -->
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+        <!-- Usage-Based Card -->
         <div class="relative group">
           <div class="relative glass p-10 flex flex-col h-full border-white/10!">
             <div class="flex justify-between items-start mb-6">
               <div>
-                <h3 class="text-xl font-bold text-white">Standard</h3>
-                <p class="text-sm text-zinc-500 mt-1">Pay-as-you-go</p>
+                <h3 class="text-xl font-bold text-white mt-0!">Usage-Based</h3>
+                <p class="text-sm text-zinc-500 mt-1!">Scale as you grow</p>
               </div>
             </div>
 
             <div class="mb-8">
               <div class="flex items-baseline gap-1">
-                <span class="text-5xl font-bold text-white tracking-tight">4.5%</span>
-                <span class="text-2xl font-medium text-zinc-400">+ $0.45</span>
+                <span class="text-3xl font-bold text-white tracking-tight">Outcome-Driven</span>
               </div>
-              <p class="text-sm text-zinc-500 mt-2">per execution</p>
+              <p class="text-sm text-zinc-500 mt-1!">Measured by applied decisions</p>
             </div>
 
             <p class="text-sm text-zinc-400 leading-relaxed mb-8">
-              "An execution occurs when an escrow lifecycle event is processed by the engine.
-              Outcome does not affect pricing."
+              "We bill based on actual utility. No monthly fees, no hidden costs. Measured by the
+              number of escrow decisions processed by the engine."
             </p>
 
             <ul class="space-y-4 text-sm text-zinc-300 mb-10 grow">
@@ -304,7 +303,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
                     stroke-width="2"
                     d="M5 13l4 4L19 7"></path>
                 </svg>
-                Full Escrow Lifecycle Logic
+                Starter, Growth, and Scale tiers
               </li>
               <li class="flex items-center gap-3">
                 <svg
@@ -319,7 +318,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
                     stroke-width="2"
                     d="M5 13l4 4L19 7"></path>
                 </svg>
-                Dispute-Aware Decision Engine
+                Deterministic resolution logic
               </li>
               <li class="flex items-center gap-3">
                 <svg
@@ -334,29 +333,29 @@ import BaseLayout from '../layouts/BaseLayout.astro'
                     stroke-width="2"
                     d="M5 13l4 4L19 7"></path>
                 </svg>
-                Webhook & HMAC Security
+                API-first orchestration
               </li>
             </ul>
 
-            <Button href="/docs/quick-start" class="w-full">Get Started</Button>
+            <Button href="/pricing" class="w-full">View Model Details</Button>
           </div>
         </div>
 
         <!-- Enterprise -->
         <div class="relative glass p-10 flex flex-col h-full border-white/5!">
           <div class="mb-6">
-            <h3 class="text-xl font-bold text-white">Enterprise</h3>
-            <p class="text-sm text-zinc-500 mt-1">Scale horizontally</p>
+            <h3 class="text-xl font-bold text-white mt-0!">Enterprise</h3>
+            <p class="text-sm text-zinc-500 mt-1!">Custom requirements</p>
           </div>
 
           <div class="mb-8">
-            <div class="text-3xl font-bold text-white">Volume-based</div>
-            <p class="text-sm text-zinc-500 mt-2">Custom pricing & terms</p>
+            <div class="text-3xl font-bold text-white">Volume-Based</div>
+            <p class="text-sm text-zinc-500 mt-1!">Custom pricing & terms</p>
           </div>
 
           <p class="text-sm text-zinc-400 leading-relaxed mb-8">
-            Built for high-volume platforms requiring dedicated infrastructure and advanced audit
-            compliance.
+            Built for high-volume platforms requiring dedicated infrastructure, priority support,
+            and advanced audit compliance.
           </p>
 
           <ul class="space-y-4 text-sm text-zinc-300 mb-10 grow">
@@ -413,19 +412,19 @@ import BaseLayout from '../layouts/BaseLayout.astro'
         </div>
       </div>
 
-      <div class="mt-16 max-w-2xl mx-auto text-center">
-        <div class="glass py-2 px-8 inline-block border-accent-hover/50!">
-          <p class="text-sm font-medium text-zinc-300">
-            <span class="text-accent-hover font-bold">Important:</span> We do not charge for API calls.
-            We charge for executed escrow decisions.
+      <div class="mt-6 text-center w-full">
+        <div class="glass py-1 inline-block border-accent-hover/50! w-full">
+          <p class="text-sm font-medium">
+            We charge for applied decisions <strong class="text-white">[DECISION_APPLIED]</strong>,
+            not individual API calls.
           </p>
         </div>
         <div class="mt-8">
           <a
-            href="/docs/pricing"
+            href="/pricing"
             class="text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
           >
-            View full pricing terms & FAQ →
+            View full pricing page →
           </a>
         </div>
       </div>

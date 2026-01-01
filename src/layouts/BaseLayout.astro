@@ -35,7 +35,8 @@ const currentPath = Astro.url.pathname
     <title>{title} | Clearhold</title>
   </head>
   <body
-    class="bg-bg-base text-text-primary antialiased selection:bg-indigo-500/30 selection:text-indigo-200 overflow-x-hidden"
+    class={'bg-bg-base text-text-primary antialiased selection:bg-indigo-500/30 selection:text-indigo-200 overflow-x-hidden ' +
+      (currentPath.startsWith('/docs') ? 'bg-dots-soft' : '')}
   >
     <div class="relative flex min-h-screen flex-col">
       <!-- Background Effects -->

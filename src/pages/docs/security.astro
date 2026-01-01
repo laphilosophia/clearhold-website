@@ -1,4 +1,5 @@
 ---
+import CodeBlock from '../../components/ui/CodeBlock.astro'
 import DocsLayout from '../../layouts/DocsLayout.astro'
 ---
 
@@ -46,7 +47,9 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
 
     <h3>Signature Calculation</h3>
 
-    <pre><code>{`// 1. Build the signature base string
+    <CodeBlock
+      lang="javascript"
+      code={`// 1. Build the signature base string
 signatureBase = method + "\\n" +
                 path + "\\n" +
                 timestamp + "\\n" +
@@ -64,11 +67,14 @@ GET /v1/escrows/esc_123
 X-Timestamp: 1735430400
 X-Nonce: unique_abc123
 
-signatureBase = "GET\\n/v1/escrows/esc_123\\n1735430400\\nunique_abc123\\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"`}</code></pre>
+signatureBase = "GET\\n/v1/escrows/esc_123\\n1735430400\\nunique_abc123\\ne3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"`}
+    />
 
     <h3>Implementation Example (TypeScript)</h3>
 
-    <pre><code>{`import { createHmac, createHash } from 'crypto';
+    <CodeBlock
+      lang="typescript"
+      code={`import { createHmac, createHash } from 'crypto';
 
 function signRequest(
   method: string,
@@ -90,7 +96,8 @@ function signRequest(
     .digest('hex');
 
   return { timestamp, nonce, signature };
-}`}</code></pre>
+}`}
+    />
 
     <h2>Replay Protection</h2>
 
@@ -100,10 +107,13 @@ function signRequest(
       Requests with timestamps older than <strong>300 seconds (5 minutes)</strong> are rejected.
     </p>
 
-    <pre><code>{`// Server-side check
+    <CodeBlock
+      lang="javascript"
+      code={`// Server-side check
 if (Math.abs(serverTime - requestTimestamp) > 300) {
   return 401; // TIMESTAMP_EXPIRED
-}`}</code></pre>
+}`}
+    />
 
     <h3>Nonce Tracking</h3>
 
@@ -149,7 +159,7 @@ if (Math.abs(serverTime - requestTimestamp) > 300) {
       <li>Scope: Per integrator</li>
     </ul>
 
-    <pre><code>{`Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000`}</code></pre>
+    <CodeBlock lang="http" code={`Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000`} />
 
     <h2>Webhook Security</h2>
 
@@ -157,7 +167,9 @@ if (Math.abs(serverTime - requestTimestamp) > 300) {
 
     <h3>Verifying Webhook Signatures</h3>
 
-    <pre><code>{`// Incoming webhook
+    <CodeBlock
+      lang="javascript"
+      code={`// Incoming webhook
 POST /your-webhook-endpoint
 X-Clearhold-Timestamp: 1735430400
 X-Clearhold-Signature: abc123...
@@ -168,7 +180,8 @@ expectedSignature = hmac_sha256(signatureBase, webhookSecret)
 
 if (!timingSafeEqual(expectedSignature, receivedSignature)) {
   return 401; // Signature mismatch
-}`}</code></pre>
+}`}
+    />
 
     <h3>Retry Policy</h3>
 
@@ -221,9 +234,12 @@ if (!timingSafeEqual(expectedSignature, receivedSignature)) {
 
     <p>Rate limit headers included in every response:</p>
 
-    <pre><code>{`X-RateLimit-Limit: 100
+    <CodeBlock
+      lang="http"
+      code={`X-RateLimit-Limit: 100
 X-RateLimit-Remaining: 87
-X-RateLimit-Reset: 1735430460`}</code></pre>
+X-RateLimit-Reset: 1735430460`}
+    />
 
     <h2>Security Guarantees</h2>
 
@@ -236,7 +252,7 @@ X-RateLimit-Reset: 1735430460`}</code></pre>
     </ul>
 
     <div class="next-link">
-      <a href="/docs/decision-engine">Next: Decision Engine →</a>
+      <a href="/docs/sdks">Next: SDKs →</a>
     </div>
   </article>
 </DocsLayout>

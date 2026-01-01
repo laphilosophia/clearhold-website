@@ -1,0 +1,366 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout title="Pricing" description="Usage-based, outcome-driven pricing model for Clearhold.">
+  <div class="relative pt-24 pb-32 overflow-hidden">
+    <!-- Grid overlay -->
+    <div class="fixed inset-0 bg-grid-soft opacity-30"></div>
+
+    <div class="relative z-10 mx-auto max-w-6xl px-6 lg:px-8">
+      <div class="mb-16 flex flex-col items-center gap-4">
+        <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl text-center">
+          Pricing & Commercial Model
+        </h1>
+        <p class="text-lg text-zinc-400 text-center m-0!">
+          Clearhold is a B2B infrastructure product. <br />
+          We partner with platforms to provide risk orchestration at scale.
+        </p>
+      </div>
+
+      <div class="glass p-8 md:p-12 mb-16 border-0!">
+        <h2 class="text-2xl font-bold text-white mb-6 mt-0!">Pricing Philosophy</h2>
+        <p class="text-zinc-400 mb-8">
+          Our pricing reflects what we actually provide: <strong>risk orchestration</strong>, not
+          just API calls.
+        </p>
+        <ul class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <li class="glass p-4 border-white/5!">
+            <div class="text-accent font-bold mb-2">Scalable</div>
+            <div class="text-sm text-zinc-500">Volume grows → unit cost decreases</div>
+          </li>
+          <li class="glass p-4 border-white/5!">
+            <div class="text-accent font-bold mb-2">Premium</div>
+            <div class="text-sm text-zinc-500">Disputes are premium actions priced accordingly</div>
+          </li>
+          <li class="glass p-4 border-white/5!">
+            <div class="text-accent font-bold mb-2">Predictable</div>
+            <div class="text-sm text-zinc-500">No "unlimited" plans — we scale with you</div>
+          </li>
+        </ul>
+
+        <div class="mb-12">
+          <h2 class="text-2xl font-bold text-white mb-2">The Model</h2>
+          <p class="text-zinc-500 mb-6">
+            Usage-based, outcome-driven pricing. You only pay when a dispute decision is <strong
+              >applied</strong
+            >.
+          </p>
+
+          <!-- Pricing Calculator -->
+          <div class="calculator-container glass p-8 border-accent/20! mb-12">
+            <h3 class="text-xl font-bold text-white mb-8 flex items-center gap-2 mt-0!">
+              <span class="text-accent text-lg">✦</span> Interactive Estimator
+            </h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <div class="space-y-8">
+                <div>
+                  <label
+                    for="volume-slider"
+                    class="text-sm font-medium text-zinc-300 mb-6 flex justify-between"
+                  >
+                    <span>Monthly Decision Volume</span>
+                    <span id="volume-display" class="text-accent font-mono font-bold">100,000</span>
+                  </label>
+                  <div class="relative pt-4">
+                    <input
+                      type="range"
+                      id="volume-slider"
+                      min="0"
+                      max="1100000"
+                      step="1000"
+                      value="100000"
+                      class="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-accent"
+                    />
+                    <div
+                      class="flex justify-between mt-4 text-[10px] text-zinc-600 font-mono uppercase tracking-widest"
+                    >
+                      <span>0</span>
+                      <span>100K</span>
+                      <span>500K</span>
+                      <span>1M+</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="p-4 bg-white/5 border border-white/5 rounded-sm">
+                  <div class="flex justify-between items-center text-sm">
+                    <span class="text-zinc-500">Selected Tier:</span>
+                    <span
+                      id="tier-badge"
+                      class="px-2 py-0.5 bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-wider rounded-full"
+                      >Growth</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="flex flex-col justify-center items-center lg:items-end text-center lg:text-right"
+              >
+                <div class="text-zinc-500 text-sm mb-1">Estimated Monthly Cost</div>
+                <div id="cost-display" class="text-5xl font-bold text-white tracking-tighter mb-4">
+                  $0.00
+                </div>
+                <div id="unit-price-display" class="text-zinc-400 text-sm font-mono">
+                  $0.0025 per event
+                </div>
+
+                <div
+                  id="custom-tier-msg"
+                  class="hidden mt-4 px-4 py-3 bg-accent/5 border border-accent/20 animate-fade-in"
+                >
+                  <p class="text-zinc-300 font-medium mb-1! mt-0!">You need more?</p>
+                  <a
+                    href="mailto:sales@clearhold.io"
+                    class="text-accent hover:text-white transition-colors text-sm font-bold underline decoration-dotted underline-offset-4"
+                    >Let's talk...</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pricing-table-wrapper">
+            <table class="pricing-table">
+              <thead>
+                <tr>
+                  <th>Plan</th>
+                  <th class="text-right">Monthly Included Events</th>
+                  <th class="text-right">Unit Price</th>
+                  <th class="text-right">Monthly Max</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Starter</strong></td>
+                  <td class="text-right">Up to 10,000</td>
+                  <td class="text-right">$0.0035</td>
+                  <td class="text-right">$35</td>
+                </tr>
+                <tr>
+                  <td><strong>Growth</strong></td>
+                  <td class="text-right">Up to 100,000</td>
+                  <td class="text-right">$0.0025</td>
+                  <td class="text-right">$250</td>
+                </tr>
+                <tr>
+                  <td><strong>Expansion</strong></td>
+                  <td class="text-right">Up to 500,000</td>
+                  <td class="text-right">$0.0015</td>
+                  <td class="text-right">$750</td>
+                </tr>
+                <tr>
+                  <td><strong>Scale</strong></td>
+                  <td class="text-right">Up to 1,000,000</td>
+                  <td class="text-right">$0.0010</td>
+                  <td class="text-right">$1,000</td>
+                </tr>
+                <tr>
+                  <td><strong>Enterprise</strong></td>
+                  <td class="text-right">1,000,000+</td>
+                  <td class="text-right">Custom</td>
+                  <td class="text-right">Negotiated</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12 border-t border-white/10">
+          <div>
+            <h3 class="text-xl font-bold text-white mb-4">What is a billable event?</h3>
+            <p class="text-sm font-mono text-accent mb-4">DECISION_APPLIED</p>
+            <p class="text-sm text-zinc-400 mb-4 max-w-xs">
+              A billable event occurs <strong>only</strong> when a dispute is finalized by applying a
+              decision via the API.
+            </p>
+            <ul class="text-sm text-zinc-500 space-y-2">
+              <li class="flex items-center gap-2">
+                <span class="text-accent">✓</span> Creating escrows → Free
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-accent">✓</span> Opening disputes → Free
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-accent">✓</span> Submitting evidence → Free
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-accent">✓</span> Fetching recommendations → Free
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-white mb-4">Limits & Enforcement</h3>
+            <ul class="text-sm text-zinc-400 space-y-4">
+              <li class="flex gap-3">
+                <span class="text-accent">01</span>
+                <span
+                  >Each plan has a <strong>hard monthly cap</strong> to prevent surprise invoices.</span
+                >
+              </li>
+              <li class="flex gap-3">
+                <span class="text-accent">02</span>
+                <span
+                  >When reached, API returns <code>402 Payment Required</code> for decision application.</span
+                >
+              </li>
+              <li class="flex gap-3">
+                <span class="text-accent">03</span>
+                <span>Read-only operations remain available at all times.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-16 py-16 bg-accent/5 border border-accent/20 text-center">
+          <h3 class="text-xl font-bold text-white mb-4 mt-0!">Ready to integrate?</h3>
+          <p class="text-zinc-400 mb-6">
+            Join platforms that prioritize deterministic risk orchestration.
+          </p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a
+              href="/docs/quick-start"
+              class="px-6 py-2 bg-accent hover:bg-accent-hover text-bg-base! font-medium transition-colors"
+              >Start Integration</a
+            >
+            <a
+              href="mailto:sales@clearhold.io"
+              class="px-6 py-2 border border-white/10 hover:bg-white/5 text-white font-medium transition-colors"
+              >Contact Sales</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .pricing-table-wrapper {
+    overflow-x: auto;
+    margin: 2rem 0;
+    background: var(--color-bg-elevated);
+  }
+
+  .pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    border: 1px solid var(--color-border);
+  }
+
+  .pricing-table th,
+  .pricing-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .pricing-table th {
+    background: rgba(255, 255, 255, 0.02);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.75rem;
+  }
+
+  .pricing-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .text-right {
+    text-align: right !important;
+  }
+
+  /* Slider Styling */
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--color-accent);
+    cursor: pointer;
+    border-radius: 50%;
+    border: 3px solid #1a1a1e;
+    box-shadow: 0 0 15px rgba(var(--color-accent-rgb), 0.3);
+  }
+
+  input[type='range']::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--color-accent);
+    cursor: pointer;
+    border-radius: 50%;
+    border: 3px solid #1a1a1e;
+    box-shadow: 0 0 15px rgba(var(--color-accent-rgb), 0.3);
+  }
+
+  .calculator-container {
+    background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.05), transparent);
+  }
+</style>
+
+<script>
+  const slider = document.getElementById('volume-slider') as HTMLInputElement
+  const volumeDisplay = document.getElementById('volume-display')
+  const tierBadge = document.getElementById('tier-badge')
+  const costDisplay = document.getElementById('cost-display')
+  const unitPriceDisplay = document.getElementById('unit-price-display')
+  const customTierMsg = document.getElementById('custom-tier-msg')
+
+  function updateCalculator() {
+    const volume = parseInt(slider.value)
+
+    let unitPrice = 0
+    let tier = ''
+    let isCustom = false
+
+    if (volume <= 10000) {
+      unitPrice = 0.0035
+      tier = 'Starter'
+    } else if (volume <= 100000) {
+      unitPrice = 0.0025
+      tier = 'Growth'
+    } else if (volume <= 500000) {
+      unitPrice = 0.0015
+      tier = 'Expansion'
+    } else if (volume <= 1000000) {
+      unitPrice = 0.001
+      tier = 'Scale'
+    } else {
+      isCustom = true
+      tier = 'Enterprise'
+    }
+
+    // Update Volume Display
+    if (volume > 1000000) {
+      volumeDisplay!.innerText = '1,000,000+'
+    } else {
+      volumeDisplay!.innerText = volume.toLocaleString()
+    }
+
+    // Update Tier Badge
+    tierBadge!.innerText = tier
+
+    // Update Price
+    if (isCustom) {
+      costDisplay!.innerText = 'Custom'
+      unitPriceDisplay!.classList.add('hidden')
+      customTierMsg!.classList.remove('hidden')
+    } else {
+      const total = volume * unitPrice
+      costDisplay!.innerText = `$${total.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+      unitPriceDisplay!.innerText = `$${unitPrice.toFixed(4)} per event`
+      unitPriceDisplay!.classList.remove('hidden')
+      customTierMsg!.classList.add('hidden')
+    }
+  }
+
+  slider?.addEventListener('input', updateCalculator)
+
+  // Initialize
+  updateCalculator()
+</script>

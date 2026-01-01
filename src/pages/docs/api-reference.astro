@@ -1,4 +1,6 @@
 ---
+import CodeBlock from '../../components/ui/CodeBlock.astro'
+import EndpointHeader from '../../components/ui/EndpointHeader.astro'
 import DocsLayout from '../../layouts/DocsLayout.astro'
 ---
 
@@ -19,13 +21,15 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
 
     <h2>Escrows</h2>
 
-    <h3>POST /v1/escrows</h3>
+    <EndpointHeader method="POST" path="/v1/escrows" />
 
     <p>Create a new escrow contract.</p>
 
     <div class="endpoint-details">
       <h4>Request Body</h4>
-      <pre><code>{`{
+      <CodeBlock
+        lang="json"
+        code={`{
   "external_id": "string",      // Your reference ID (required)
   "currency": "string",         // ISO 4217 code (required)
   "total_amount": "integer",    // Amount in minor units (required)
@@ -36,10 +40,13 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
       "deadline": "string"      // ISO 8601 UTC
     }
   ]
-}`}</code></pre>
+}`}
+      />
 
       <h4>Response (201)</h4>
-      <pre><code>{`{
+      <CodeBlock
+        lang="json"
+        code={`{
   "id": "esc_...",
   "external_id": "string",
   "state": "CREATED",
@@ -47,7 +54,8 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
   "total_amount": "integer",
   "milestones": [...],
   "created_at": "ISO 8601"
-}`}</code></pre>
+}`}
+      />
 
       <h4>Errors</h4>
       <ul>
@@ -56,32 +64,40 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
       </ul>
     </div>
 
-    <h3>POST /v1/escrows/:id/payment-status</h3>
+    <EndpointHeader method="POST" path="/v1/escrows/:id/payment-status" />
 
     <p>Declare payment status (you inform us, we don't poll).</p>
 
     <div class="endpoint-details">
       <h4>Request Body</h4>
-      <pre><code>{`{
+      <CodeBlock
+        lang="json"
+        code={`{
   "external_payment_ref": "string",  // Your payment reference
   "status": "FUNDS_HELD | FUNDS_RELEASED | FUNDS_REFUNDED",
   "declared_at": "ISO 8601"
-}`}</code></pre>
+}`}
+      />
 
       <h4>Response (200)</h4>
-      <pre><code>{`{
+      <CodeBlock
+        lang="json"
+        code={`{
   "status": "accepted",
   "current_state": "FUNDED | CANCELLED"
-}`}</code></pre>
+}`}
+      />
     </div>
 
-    <h3>POST /v1/escrows/:id/deliverable</h3>
+    <EndpointHeader method="POST" path="/v1/escrows/:id/deliverable" />
 
     <p>Submit a deliverable reference for a milestone.</p>
 
     <div class="endpoint-details">
       <h4>Request Body</h4>
-      <pre><code>{`{
+      <CodeBlock
+        lang="json"
+        code={`{
   "milestone_id": "string",
   "reference": {
     "type": "external_reference",
@@ -89,38 +105,48 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
     "uri": "string",                // Full URL
     "content_hash": "sha256:..."    // Required prefix
   }
-}`}</code></pre>
+}`}
+      />
 
       <h4>Response (200)</h4>
-      <pre><code>{`{
+      <CodeBlock
+        lang="json"
+        code={`{
   "status": "received",
   "state": "DELIVERED"
-}`}</code></pre>
+}`}
+      />
     </div>
 
-    <h3>POST /v1/escrows/:id/dispute</h3>
+    <EndpointHeader method="POST" path="/v1/escrows/:id/dispute" />
 
     <p>Open a dispute for an escrow.</p>
 
     <div class="endpoint-details">
       <h4>Request Body</h4>
-      <pre><code>{`{
+      <CodeBlock
+        lang="json"
+        code={`{
   "reason_code": "DELIVERABLE_INCOMPLETE | DELIVERABLE_NOT_AS_DESCRIBED | DELIVERABLE_LATE | PAYMENT_ISSUE | COMMUNICATION_BREAKDOWN | OTHER",
   "opened_by": {
     "actor_id": "string",
     "actor_role": "client | contractor | operator"
   }
-}`}</code></pre>
+}`}
+      />
 
       <h4>Response (201)</h4>
-      <pre><code>{`{
+      <CodeBlock
+        lang="json"
+        code={`{
   "id": "dsp_...",
   "escrow_id": "esc_...",
   "state": "OPEN",
   "reason_code": "string",
   "opened_by": {...},
   "created_at": "ISO 8601"
-}`}</code></pre>
+}`}
+      />
 
       <h4>Errors</h4>
       <ul>
@@ -131,13 +157,15 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
 
     <h2>Disputes</h2>
 
-    <h3>POST /v1/disputes/:id/evidence</h3>
+    <EndpointHeader method="POST" path="/v1/disputes/:id/evidence" />
 
     <p>Submit evidence for a dispute.</p>
 
     <div class="endpoint-details">
       <h4>Request Body</h4>
-      <pre><code>{`{
+      <CodeBlock
+        lang="json"
+        code={`{
   "submitted_by": {
     "actor_id": "string",
     "actor_role": "client | contractor | operator"
@@ -148,14 +176,18 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
     "uri": "string",
     "content_hash": "sha256:..."
   }
-}`}</code></pre>
+}`}
+      />
 
       <h4>Response (201)</h4>
-      <pre><code>{`{
+      <CodeBlock
+        lang="json"
+        code={`{
   "id": "evd_...",
   "dispute_id": "dsp_...",
   "submitted_at": "ISO 8601"
-}`}</code></pre>
+}`}
+      />
 
       <h4>Errors</h4>
       <ul>
@@ -163,25 +195,30 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
       </ul>
     </div>
 
-    <h3>POST /v1/disputes/:id/lock</h3>
+    <EndpointHeader method="POST" path="/v1/disputes/:id/lock" />
 
     <p>Lock evidence submission phase.</p>
 
     <div class="endpoint-details">
       <h4>Response (200)</h4>
-      <pre><code>{`{
+      <CodeBlock
+        lang="json"
+        code={`{
   "status": "locked",
   "state": "EVIDENCE_LOCKED"
-}`}</code></pre>
+}`}
+      />
     </div>
 
-    <h3>GET /v1/disputes/:id/recommendation</h3>
+    <EndpointHeader method="GET" path="/v1/disputes/:id/recommendation" />
 
     <p>Get engine recommendation for dispute resolution.</p>
 
     <div class="endpoint-details">
       <h4>Response (200)</h4>
-      <pre><code>{`{
+      <CodeBlock
+        lang="json"
+        code={`{
   "recommendation": "FULL_RELEASE | FULL_REFUND | SPLIT",
   "confidence": 0.0-1.0,
   "signals": ["string"],
@@ -190,33 +227,39 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
     "contractor": 0.0-1.0
   },
   "engine_version": "v1.0.0"
-}`}</code></pre>
+}`}
+      />
     </div>
 
-    <h3>POST /v1/disputes/:id/decision</h3>
+    <EndpointHeader method="POST" path="/v1/disputes/:id/decision" />
 
     <p>Apply final decision to resolve dispute.</p>
 
     <div class="endpoint-details">
       <h4>Request Body</h4>
-      <pre><code>{`{
+      <CodeBlock
+        lang="json"
+        code={`{
   "decision": "FULL_RELEASE | FULL_REFUND | SPLIT",
   "final_ratio": {
     "client": 0.0-1.0,
     "contractor": 0.0-1.0
   },
   "justification": "string"  // Required
-}`}</code></pre>
+}`}
+      />
 
-      <h4>Response (200)</h4>
-      <pre><code>{`{
+      <CodeBlock
+        lang="json"
+        code={`{
   "status": "resolved",
   "outcome": "string",
   "payout": {
     "client": "integer",      // Amount in minor units
     "contractor": "integer"
   }
-}`}</code></pre>
+}`}
+      />
 
       <h4>Errors</h4>
       <ul>
@@ -228,14 +271,17 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
 
     <p>All errors follow this structure:</p>
 
-    <pre><code>{`{
+    <CodeBlock
+      lang="json"
+      code={`{
   "error_code": "INVALID_STATE_TRANSITION",
   "message": "Human-readable description",
   "context": {
     "current_state": "string",
     "attempted_action": "string"
   }
-}`}</code></pre>
+}`}
+    />
 
     <h3>Common Error Codes</h3>
 
@@ -293,15 +339,13 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
   }
 
   .endpoint-details {
-    margin: 1rem 0 2rem;
-    padding: 1rem;
-    background: var(--color-bg-surface);
-    border: 1px solid var(--color-border);
+    margin: 2rem 0 6rem;
   }
 
   .endpoint-details h4 {
-    margin: 1rem 0 0.5rem;
+    margin: 1rem 0 -0.5rem;
     font-size: 0.875rem;
+    padding-left: 1rem;
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;

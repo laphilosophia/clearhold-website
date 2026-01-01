@@ -1,4 +1,5 @@
 ---
+import CodeBlock from '../../components/ui/CodeBlock.astro'
 import DocsLayout from '../../layouts/DocsLayout.astro'
 ---
 
@@ -98,14 +99,17 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
       When you submit evidence for a dispute, you send us a <strong>reference</strong>:
     </p>
 
-    <pre><code>{`{
+    <CodeBlock
+      lang="json"
+      code={`{
   "reference": {
     "type": "external_reference",
     "provider": "google_drive",
     "uri": "https://drive.google.com/...",
     "content_hash": "sha256:abc123..."
   }
-}`}</code></pre>
+}`}
+    />
 
     <p>We store the hash for integrity verification. We never download or store the actual file.</p>
 

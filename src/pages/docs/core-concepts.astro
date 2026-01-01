@@ -1,4 +1,5 @@
 ---
+import CodeBlock from '../../components/ui/CodeBlock.astro'
 import DocsLayout from '../../layouts/DocsLayout.astro'
 ---
 
@@ -71,7 +72,9 @@ import DocsLayout from '../../layouts/DocsLayout.astro'
       Milestone amounts <strong>must equal</strong> escrow total. API rejects mismatched sums.
     </p>
 
-    <pre><code>{`// Valid
+    <CodeBlock
+      lang="typescript"
+      code={`// Valid
 total_amount: 50000
 milestones: [
   { amount: 20000 },
@@ -83,7 +86,8 @@ total_amount: 50000
 milestones: [
   { amount: 20000 },
   { amount: 25000 }
-]  // Sum = 45000 ✗`}</code></pre>
+]  // Sum = 45000 ✗`}
+    />
 
     <h2>Dispute</h2>
 
@@ -178,46 +182,44 @@ milestones: [
 
     <h2>Lifecycle Diagram</h2>
 
-    <pre
-      class="lifecycle-diagram">{`
-┌─────────┐
-│ Escrow  │
-│ Created │
-└────┬────┘
-     │ Payment declared
-     ▼
-┌─────────┐
-│ Funded  │
-└────┬────┘
-     │ Work begins
-     ▼
-┌──────────────┐
-│ In Progress  │───────┬────────────────────────┐
-└──────────────┘       │                        │
-     │                 │ Dispute opened          │
-     │ Deliverable     ▼                        │
-     │ submitted  ┌─────────┐                   │
-     │            │ Dispute │                   │
-     ▼            │  OPEN   │                   │
-┌───────────┐    └────┬────┘                   │
-│ Delivered │         │ Evidence locked         │
-└─────┬─────┘         ▼                        │
-      │          ┌─────────────┐               │
-      │          │ Evidence    │               │
-      │          │ Locked      │               │
-      │          └──────┬──────┘               │
-      │                 │ Decision applied      │
-      │                 ▼                       │
-      │          ┌──────────┐                  │
-      │          │ Resolved │                  │
-      │          └──────────┘                  │
-      │                                        │
-      │ No dispute                             │
-      ▼                                        │
-┌───────────┐                                  │
-│ Completed │◀─────────────────────────────────┘
-└───────────┘
-`}</pre>
+    <div class="diagram-container">
+      <div class="flow-step">
+        <div class="flow-node" data-special="true">ESCROW_CREATED</div>
+        <div class="flow-line"><span class="flow-label">Payment Declared</span></div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-node">FUNDED</div>
+        <div class="flow-line"><span class="flow-label">Work Begins</span></div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-node" data-special="true">IN_PROGRESS</div>
+        <div class="flow-line"><span class="flow-label">Work In Progress</span></div>
+      </div>
+
+      <div class="flow-grid">
+        <div class="flow-branch flow-branch--left">
+          <div class="flow-step">
+            <div class="flow-line"><span class="flow-label">Deliverable Submitted</span></div>
+            <div class="flow-node">DELIVERED</div>
+            <div class="flow-line"><span class="flow-label">No Dispute</span></div>
+            <div class="flow-node" style="border-color: #10b981;">COMPLETED</div>
+          </div>
+        </div>
+
+        <div class="flow-branch flow-branch--right">
+          <div class="flow-step">
+            <div class="flow-line"><span class="flow-label">Dispute Opened</span></div>
+            <div class="flow-node" style="border-color: #ef4444;">DISPUTE_OPENED</div>
+            <div class="flow-line"><span class="flow-label">Evidence Locked</span></div>
+            <div class="flow-node">EVIDENCE_LOCKED</div>
+            <div class="flow-line"><span class="flow-label">Decision Applied</span></div>
+            <div class="flow-node">RESOLVED</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="next-link">
       <a href="/docs/api-reference">Next: API Reference →</a>

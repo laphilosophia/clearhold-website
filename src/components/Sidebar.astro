@@ -29,14 +29,13 @@ const navItems = [
       { href: '/docs/faq', label: 'FAQ' },
       { href: '/docs/changelog', label: 'Changelog' },
       { href: '/docs/legal', label: 'Legal' },
-      { href: '/docs/pricing', label: 'Pricing' },
     ],
   },
 ]
 
 const currentPath = Astro.url.pathname
 function isActive(href: string) {
-  return currentPath === href || currentPath.startsWith(href + '/')
+  return currentPath.includes(href) || currentPath.startsWith(href + '/')
 }
 ---
 
@@ -49,15 +48,15 @@ function isActive(href: string) {
         <h5 class="mb-3 font-medium text-zinc-300 text-xs uppercase tracking-wider">
           {section.title}
         </h5>
-        <ul class="space-y-1 border-l border-white/5">
+        <ul class="space-y-1">
           {section.items.map((item) => (
-            <li>
+            <li class="m-0!">
               <a
                 href={item.href}
                 class:list={[
-                  'block border-l -ml-px pl-4 py-1.5 transition-all duration-200 hover:border-indigo-400/50 hover:text-white',
+                  'block border-l -ml-px pl-4 py-2 transition-all duration-200 hover:text-white',
                   isActive(item.href)
-                    ? 'border-indigo-500 text-indigo-400 font-medium bg-indigo-500/5'
+                    ? 'border-primary text-white font-bold bg-primary/5'
                     : 'border-transparent text-zinc-500',
                 ]}>
                 {item.label}
